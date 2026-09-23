@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "public": true,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/prova1", "destination": "/index.html" },
+    { "source": "/prova2", "destination": "/index.html" },
+    { "source": "/prova3", "destination": "/index.html" },
+    { "source": "/api/provas", "destination": "/api/provas.js" },
+    { "source": "/api/prova/:id", "destination": "/api/provas.js?id=:id" }
+  ]
+}

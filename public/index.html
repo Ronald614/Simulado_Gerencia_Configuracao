@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulados Somativos - Gerencia de Configuracao</title>
+  <!-- Frameworks e Componentes Prontos: Tailwind CSS + DaisyUI via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Framework Reativo: Vue 3 via CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body class="bg-base-300 text-base-content min-h-screen">
+  <div id="app" class="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
+
+    <!-- Navbar / Header -->
+    <header class="navbar bg-base-200 shadow-lg rounded-box px-4 flex-wrap gap-2 justify-between border border-base-100">
+      <div class="flex items-center gap-3">
+        <span class="badge badge-primary font-bold text-xs uppercase tracking-wider">IC / UFAM</span>
+        <div>
+          <a @click="navegar('/')" class="btn btn-ghost text-lg md:text-xl font-bold normal-case px-0 cursor-pointer">
+            Gerencia de Configuracao
+          </a>
+          <p class="text-xs text-base-content/70 hidden sm:block">
+            Simulados Somativos Independentes para Estudo (Git & SmartNotes)
+          </p>
+        </div>
+      </div>
+
+      <!-- Tabs de Navegacao Prontas -->
+      <div class="tabs tabs-boxed bg-base-100">
+        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/'}" @click="navegar('/')">Inicio</a>
+        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova1'}" @click="navegar('/prova1')">Prova 01</a>
+        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova2'}" @click="navegar('/prova2')">Prova 02</a>
+        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova3'}" @click="navegar('/prova3')">Prova 03</a>
+      </div>
+    </header>
+
+    <!-- Disclaimer Formal de Autoria -->
+    <div class="alert alert-info shadow-sm bg-base-200 border border-info/30 text-xs md:text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div>
+        <span class="font-bold">Aviso de Estudo:</span> Este e um <strong>simulado independente de preparacao</strong> elaborado colaborativamente para estudo da prova. Material de referencia: slides e aulas do Prof. David Fernandes de Oliveira (IC/UFAM).
+      </div>
+    </div>
+
+    <!-- Tela Inicial (Hub / Visao Geral) -->
+    <main v-if="rotaAtual === '/'" class="space-y-6">
+      <div class="hero bg-base-200 rounded-box border border-base-100 p-6 md:p-8 shadow-md">
+        <div class="hero-content text-left max-w-3xl">
+          <div>
+            <h1 class="text-3xl font-extrabold text-primary mb-2">Simulados no Formato Somativo</h1>
+            <p class="text-sm md:text-base text-base-content/80 leading-relaxed mb-4">
+              Cada questao apresenta 5 proposicoes com valores binarios em potencias de base 2:
+              <span class="font-mono font-bold text-secondary">(01), (02), (04), (08) e (16)</span>.
+              A resposta correta corresponde exclusivamente a <strong>soma dos valores das proposicoes verdadeiras</strong>.
+              Cada questao vale <strong>2,0 pontos</strong>, totalizando <strong>10,0 pontos</strong>.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="badge badge-outline">5 Questoes por Simulado</span>
+              <span class="badge badge-outline">Soma Unica Binaria</span>
+              <span class="badge badge-outline">Correcao Instantanea com Justificativa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards Prontos das 3 Provas -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div v-for="prova in listaProvas" :key="prova.id" class="card bg-base-200 border border-base-100 shadow-md hover:shadow-xl transition-all">
+          <div class="card-body justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="badge badge-primary font-bold text-xs uppercase">{{ prova.id.replace('_', ' ') }}</span>
+                <span class="text-xs font-semibold text-base-content/60">{{ prova.pontuacao_total.toFixed(1) }} pts</span>
+              </div>
+              <h2 class="card-title text-base font-bold text-primary">{{ prova.titulo.split(' - ')[0] }}</h2>
+              <p class="text-xs text-base-content/70 mt-2 line-clamp-3">
+                {{ prova.questoes.map(q => q.tema.split(' - ')[1] || q.tema).join(' | ') }}
+              </p>
+            </div>
+            <div class="card-actions mt-4">
+              <button @click="navegar('/' + prova.id.replace('_', ''))" class="btn btn-primary btn-sm w-full font-bold">
+                Abrir {{ prova.id.replace('prova_0', 'Prova ') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links de Compartilhamento -->
+      <div class="card bg-base-200 border border-base-100 p-4 shadow-sm">
+        <h3 class="text-sm font-bold text-base-content/90 mb-2">Endpoints Prontos para Compartilhar com Amigos:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono">
+          <a @click="navegar('/prova1')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova1</a>
+          <a @click="navegar('/prova2')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova2</a>
+          <a @click="navegar('/prova3')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova3</a>
+          <a href="/api/provas" target="_blank" class="btn btn-outline btn-xs justify-start">/api/provas (JSON)</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Tela do Simulado Selecionado -->
+    <main v-else-if="provaAtiva" class="space-y-6">
+      <!-- Cabecalho da Prova e Painel de Pontos -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-base-200 p-5 rounded-box border border-base-100 shadow-sm">
+        <div>
+          <span class="badge badge-secondary font-bold text-xs uppercase mb-1">{{ provaAtiva.id.replace('_', ' ') }}</span>
+          <h1 class="text-2xl font-black text-primary">{{ provaAtiva.titulo }}</h1>
+          <p class="text-xs text-base-content/70 mt-1">
+            5 questoes somativas valendo 2,0 pontos cada | Total: 10,0 pontos
+          </p>
+        </div>
+
+        <!-- Componente Stat do DaisyUI -->
+        <div class="stats bg-base-100 shadow border border-base-300 shrink-0">
+          <div class="stat py-2 px-4 text-center">
+            <div class="stat-title text-xs font-bold uppercase">Sua Pontuacao</div>
+            <div class="stat-value text-xl font-black" :class="conferido ? (pontosObtidos >= 7 ? 'text-success' : 'text-warning') : 'text-primary'">
+              {{ conferido ? pontosObtidos.toFixed(1) : '--' }} <span class="text-xs font-normal text-base-content/60">/ 10.0</span>
+            </div>
+            <div class="stat-desc text-xs font-semibold">
+              {{ conferido ? `${totalAcertos}/5 questoes corretas` : 'Nao submetido' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de Questoes -->
+      <div class="space-y-6">
+        <div v-for="q in provaAtiva.questoes" :key="q.numero" class="card bg-base-200 border border-base-100 shadow-md">
+          <div class="card-body p-5 md:p-6 space-y-4">
+            
+            <!-- Header da Questao -->
+            <div class="flex justify-between items-start flex-wrap gap-2 pb-2 border-b border-base-300">
+              <span class="font-extrabold text-base text-primary">
+                Questao {{ String(q.numero).padStart(2, '0') }}: {{ q.tema }}
+              </span>
+              <span class="badge badge-neutral text-xs font-bold">{{ q.pontos.toFixed(1) }} pontos</span>
+            </div>
+
+            <!-- Enunciado -->
+            <p class="text-sm text-base-content/90 leading-relaxed font-medium">
+              {{ q.enunciado }}
+            </p>
+
+            <!-- Lista de Proposicoes com Checkboxes Prontos -->
+            <div class="space-y-2">
+              <label 
+                v-for="p in q.proposicoes" 
+                :key="p.valor" 
+                class="flex items-start gap-3 p-3 rounded-lg bg-base-100 hover:bg-base-300/60 transition-colors border border-base-300 cursor-pointer"
+              >
+                <input 
+                  type="checkbox" 
+                  class="checkbox checkbox-primary checkbox-sm mt-0.5" 
+                  :value="p.valor"
+                  v-model="respostasUsuario[q.numero]"
+                />
+                <span class="badge badge-sm font-mono font-bold text-secondary shrink-0">
+                  ({{ String(p.valor).padStart(2, '0') }})
+                </span>
+                <span class="text-xs md:text-sm text-base-content/90 flex-1 leading-snug">
+                  {{ p.texto }}
+                </span>
+              </label>
+            </div>
+
+            <!-- Painel de Soma da Questao -->
+            <div class="flex justify-between items-center bg-base-100 p-3 rounded-lg border border-base-300">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-base-content/70">Sua Soma:</span>
+                <span class="font-mono font-extrabold text-lg text-primary bg-base-300 px-3 py-0.5 rounded">
+                  {{ String(calcularSomaUsuario(q.numero)).padStart(2, '0') }}
+                </span>
+              </div>
+
+              <!-- Indicador de Status apos conferir -->
+              <div v-if="conferido">
+                <span v-if="calcularSomaUsuario(q.numero) === q.soma_correta" class="badge badge-success font-bold text-xs gap-1 py-3 px-3">
+                  CORRETO (+{{ q.pontos.toFixed(1) }} pts)
+                </span>
+                <span v-else class="badge badge-error font-bold text-xs gap-1 py-3 px-3">
+                  INCORRETO (Gabarito: {{ String(q.soma_correta).padStart(2, '0') }})
+                </span>
+              </div>
+            </div>
+
+            <!-- Secao de Feedback e Justificativas (Aparece ao Conferir) -->
+            <div v-if="conferido" class="mt-4 pt-4 border-t border-base-300 space-y-2">
+              <div class="alert shadow-sm py-2 px-3 text-xs" :class="calcularSomaUsuario(q.numero) === q.soma_correta ? 'alert-success' : 'alert-error'">
+                <span>
+                  <strong>Gabarito Oficial: Soma {{ String(q.soma_correta).padStart(2, '0') }}</strong>
+                  (Itens verdadeiros: {{ q.proposicoes_verdadeiras.map(v => '(' + String(v).padStart(2, '0') + ')').join(', ') }})
+                </span>
+              </div>
+
+              <div class="space-y-1.5 pt-1">
+                <div 
+                  v-for="p in q.proposicoes" 
+                  :key="p.valor"
+                  class="p-2.5 rounded text-xs bg-base-100 border-l-4 leading-relaxed"
+                  :class="p.correto ? 'border-success' : 'border-error'"
+                >
+                  <span class="font-bold font-mono">({{ String(p.valor).padStart(2, '0') }})</span>
+                  <span class="font-bold ml-1" :class="p.correto ? 'text-success' : 'text-error'">
+                    [{{ p.correto ? 'VERDADEIRA' : 'FALSA' }}]
+                  </span>: 
+                  <span class="text-base-content/80">{{ p.justificativa }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra Flutuante de Acoes Pronta -->
+      <div class="sticky bottom-4 z-40 bg-base-200 border-2 border-primary rounded-box shadow-2xl p-4 flex flex-wrap justify-between items-center gap-4">
+        <div>
+          <div class="text-sm font-bold text-base-content">
+            Total Respondido: {{ questoesRespondidasCount }} / 5 questoes
+          </div>
+          <div class="text-xs text-base-content/60">
+            Marque as proposicoes que julgar verdadeiras em cada questao.
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="resetarRespostas()" class="btn btn-outline btn-sm font-bold">
+            Limpar Respostas
+          </button>
+          <button @click="conferirGabarito()" class="btn btn-primary btn-sm font-bold shadow-md">
+            Conferir Gabarito
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Rodape -->
+    <footer class="text-center text-xs text-base-content/50 pt-8 pb-4 border-t border-base-200">
+      Simulados de Gerencia de Configuracao | IC - UFAM | Feito com Vue 3, DaisyUI e Tailwind CSS para Vercel.
+    </footer>
+
+  </div>
+
+  <!-- Script da Aplicacao Vue 3 -->
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const rotaAtual = ref('/');
+        const listaProvas = ref([]);
+        const provaAtiva = ref(null);
+        const respostasUsuario = ref({ 1: [], 2: [], 3: [], 4: [], 5: [] });
+        const conferido = ref(false);
+
+        const carregarDados = async () => {
+          try {
+            const res = await fetch('/provas.json');
+            const data = await res.json();
+            listaProvas.value = data.provas;
+            sincronizarRota();
+          } catch (err) {
+            console.error('Falha ao carregar dados:', err);
+          }
+        };
+
+        const sincronizarRota = () => {
+          const path = window.location.pathname;
+          if (path.includes('prova1')) {
+            selecionarProva('prova_01', '/prova1');
+          } else if (path.includes('prova2')) {
+            selecionarProva('prova_02', '/prova2');
+          } else if (path.includes('prova3')) {
+            selecionarProva('prova_03', '/prova3');
+          } else {
+            rotaAtual.value = '/';
+            provaAtiva.value = null;
+          }
+        };
+
+        const navegar = (rota) => {
+          rotaAtual.value = rota;
+          window.history.pushState(null, '', rota);
+          if (rota === '/prova1') selecionarProva('prova_01', rota);
+          else if (rota === '/prova2') selecionarProva('prova_02', rota);
+          else if (rota === '/prova3') selecionarProva('prova_03', rota);
+          else {
+            provaAtiva.value = null;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        };
+
+        const selecionarProva = (id, rota) => {
+          rotaAtual.value = rota;
+          const encontrada = listaProvas.value.find(p => p.id === id);
+          if (encontrada) {
+            provaAtiva.value = encontrada;
+            respostasUsuario.value = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+            conferido.value = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        };
+
+        const calcularSomaUsuario = (qNum) => {
+          const vals = respostasUsuario.value[qNum] || [];
+          return vals.reduce((acc, v) => acc + parseInt(v, 10), 0);
+        };
+
+        const totalAcertos = computed(() => {
+          if (!provaAtiva.value || !conferido.value) return 0;
+          let acertos = 0;
+          provaAtiva.value.questoes.forEach(q => {
+            if (calcularSomaUsuario(q.numero) === q.soma_correta) {
+              acertos++;
+            }
+          });
+          return acertos;
+        });
+
+        const pontosObtidos = computed(() => {
+          if (!provaAtiva.value || !conferido.value) return 0.0;
+          let pts = 0.0;
+          provaAtiva.value.questoes.forEach(q => {
+            if (calcularSomaUsuario(q.numero) === q.soma_correta) {
+              pts += q.pontos;
+            }
+          });
+          return pts;
+        });
+
+        const questoesRespondidasCount = computed(() => {
+          let count = 0;
+          for (let i = 1; i <= 5; i++) {
+            if ((respostasUsuario.value[i] || []).length > 0) count++;
+          }
+          return count;
+        });
+
+        const conferirGabarito = () => {
+          conferido.value = true;
+        };
+
+        const resetarRespostas = () => {
+          respostasUsuario.value = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+          conferido.value = false;
+        };
+
+        onMounted(() => {
+          carregarDados();
+          window.addEventListener('popstate', sincronizarRota);
+        });
+
+        return {
+          rotaAtual,
+          listaProvas,
+          provaAtiva,
+          respostasUsuario,
+          conferido,
+          navegar,
+          calcularSomaUsuario,
+          totalAcertos,
+          pontosObtidos,
+          questoesRespondidasCount,
+          conferirGabarito,
+          resetarRespostas
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

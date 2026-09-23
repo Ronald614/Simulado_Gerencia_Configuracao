@@ -1,0 +1,12 @@
+# Python virtualenv and cache
+.venv/
+__pycache__/
+*.pyc
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Logs and scratch
+*.log
+/tmp/

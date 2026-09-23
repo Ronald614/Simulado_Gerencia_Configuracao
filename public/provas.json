@@ -1,0 +1,708 @@
+{
+  "provas": [
+    {
+      "id": "prova_01",
+      "titulo": "Simulado Somativo 01 - Preparacao para a Prova de Gerencia de Configuracao",
+      "disciplina": "Gerencia de Configuracao",
+      "material_referencia": "Aulas e Slides do Prof. David Fernandes de Oliveira (IC/UFAM)",
+      "elaboracao": "Simulado Independente de Estudos para a Prova",
+      "pontuacao_total": 10.0,
+      "instrucoes": "Cada questao contem 5 proposicoes com valores binarios (01, 02, 04, 08, 16). A resposta corresponde a soma exclusiva das proposicoes verdadeiras. Cada questao vale 2,0 pontos.",
+      "questoes": [
+        {
+          "numero": 1,
+          "tema": "Git - Arquitetura, Fundamentos e os Tres Estados do Ciclo de Vida",
+          "pontos": 2.0,
+          "enunciado": "Com relacao a arquitetura dos sistemas de controle de versao e aos conceitos fundamentais de funcionamento do Git, analise as proposicoes a seguir:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "Diferentemente dos Sistemas de Controle de Versao Centralizados (como CVS ou Subversion), nos quais a indisponibilidade do servidor central bloqueia o registro de versoes pelos desenvolvedores, o Git fundamenta-se em uma arquitetura distribuida, onde cada clone local contem uma copia integral do repositorio com todo o seu historico.",
+              "correto": true,
+              "justificativa": "No modelo centralizado, a indisponibilidade do servidor impede qualquer gravacao de historico pela equipe; no Git distribuido, cada cliente possui um repositorio completo e opera de forma autônoma offline (Slides 5 a 8 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O Git estrutura o ciclo de vida dos arquivos em tres estados fundamentais: Working Directory (diretorio de trabalho contendo os arquivos modificados), Staging Area / Index (area de preparacao onde as alteracoes sao selecionadas para o proximo commit) e Repository / .git directory (banco de objetos onde os snapshots confirmados sao gravados de maneira permanente).",
+              "correto": true,
+              "justificativa": "Essa triade constitui o fluxo operacional central do Git, dividindo o ciclo de vida entre edicao local, preparacao de commits e persistencia definitiva no banco de dados do Git (Slide 22 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "A execucao do comando git commit -m 'mensagem' consolida as modificacoes diretamente no servidor remoto (como GitHub ou GitLab), sendo desnecessario executar o comando git push para sincronizacao com a equipe.",
+              "correto": false,
+              "justificativa": "O comando git commit opera estritamente no repositorio local. O envio dos commits locais para o servidor remoto exige o comando de rede git push (Slides 21 e 96 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "O arquivo .gitignore e utilizado para listar padroes de nomes de arquivos e diretorios que nao devem ser rastreados pelo Git (como node_modules/, logs e arquivos de segredos locais), devendo ele proprio ser comitado no repositorio para garantir a padronizacao das exclusoes entre todos os colaboradores.",
+              "correto": true,
+              "justificativa": "O .gitignore define padroes ignorados pelo versionador e deve ser integrado ao repositorio para que toda a equipe adote as mesmas exclusoes de dependencias e credenciais (Slides 30 a 35 de 1_git.pdf e Slide 37 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "A inclusao de um padrao de arquivo no .gitignore remove automaticamente e de forma retroativa os arquivos correspondentes que ja haviam sido comitados no historico do repositorio.",
+              "correto": false,
+              "justificativa": "O .gitignore atua somente sobre arquivos nao rastreados (untracked). Arquivos ja comitados permanecem no historico e precisam ser removidos do indice via git rm --cached (Slides 30 a 34 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 11,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            8
+          ]
+        },
+        {
+          "numero": 2,
+          "tema": "Git - Ramificacao (Branches), Ponteiro HEAD e Conflitos de Integracao",
+          "pontos": 2.0,
+          "enunciado": "Em relacao ao mecanismo de ramificacao, ponteiros de navegacao e resolucao de conflitos de merge no Git, avalie as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "No Git, uma branch nao e uma duplicacao fisica dos arquivos do projeto no disco, mas sim um ponteiro movel de baixo custo computacional que referencia um commit especifico na arvore historica.",
+              "correto": true,
+              "justificativa": "Uma branch e apenas uma referencia de texto de 41 bytes contendo o hash do commit apontado, permitindo criacao e chaveamento instantaneos (Slides 45 e 46 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O ponteiro HEAD referencia obrigatoriamente um commit hospedado no repositorio remoto origin, sendo tecnicamente impossivel configurar o HEAD para apontar diretamente para um commit local sem vincular a uma branch nominal.",
+              "correto": false,
+              "justificativa": "O HEAD referencia a branch ou commit local ativo. Ao apontar diretamente para um commit (via git switch --detach <commit>), o Git entra no estado de Detached HEAD localmente (Slides 54 a 56 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "A operacao de mesclagem do tipo Fast-Forward ocorre quando a branch de destino nao possui commits divergentes em relacao a branch integrada, permitindo ao Git simplesmente deslocar o ponteiro da branch de destino diretamente para o topo da branch mesclada, sem a criacao de um novo commit de merge.",
+              "correto": true,
+              "justificativa": "Na ausencia de bifurcacao divergente no historico, o Git apenas avanca o ponteiro da branch destino linearmente ate a ponta da branch mesclada (Slides 58 a 60 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "Quando duas branches realizam alteracoes em arquivos distintos ou em trechos nao sobrepostos do mesmo arquivo, o Git nao consegue unificar as alteracoes de forma automatica, gerando compulsoriamente um conflito de merge.",
+              "correto": false,
+              "justificativa": "O Git unifica alteracoes em arquivos distintos ou regioes distintas do mesmo arquivo de modo automatico via three-way merge, gerando conflito apenas em colisoes na mesma linha (Slides 70 e 71 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "Durante a ocorrencia de um conflito de merge, o Git inclui marcadores visuais no arquivo afetado (como <<<<<<< HEAD, ======= e >>>>>>> <branch>), cabendo ao desenvolvedor inspecionar o arquivo, reconciliar o conteudo desejado, remover os delimitadores e executar git add para assinalar a resolucao do conflito.",
+              "correto": true,
+              "justificativa": "Os delimitadores visuais marcam as duas versoes conflitantes. A resolucao manual requer correcao do texto, remocao dos marcadores e adicao ao index via git add (Slides 76 a 82 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 21,
+          "proposicoes_verdadeiras": [
+            1,
+            4,
+            16
+          ]
+        },
+        {
+          "numero": 3,
+          "tema": "Git - Rebase, Modos de Reset, Reflog e Stash",
+          "pontos": 2.0,
+          "enunciado": "Sobre tecnicas avancadas de integracao de codigo, modificacao de historico e recuperacao de estados no Git, julgue as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "Enquanto o git merge preserva a cronologia e a topologia original das ramificacoes gerando commits de integracao (merge commits), o git rebase reaplica linearmente os commits de uma branch sobre o topo de outra, alterando os hashes SHA-1 dos commits movidos e resultando em um historico linear sem bifurcacoes visuais.",
+              "correto": true,
+              "justificativa": "O rebase gera novos commits reaplicados no topo da base, gerando novos hashes e garantindo grafo linear em contraposicao ao historico topologico do merge (Slides 112 a 118 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O comando git rebase e uma pratica recomendada e segura para ser executada em branches publicas e compartilhadas por varios membros da equipe (como a branch main no servidor remoto), uma vez que nao afeta a rastreabilidade dos colaboradores externos.",
+              "correto": false,
+              "justificativa": "A regra de ouro proibe rebase em branches publicas: alterar hashes de commits ja baixados por outros colaboradores gera graves problemas de divergencia historica (Slides 116 e 118 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "O comando git reset HEAD~1 --soft desloca o ponteiro da branch corrente de volta para o commit pai imediato, mantendo intactas as alteracoes nos arquivos do projeto e conservando-as preparadas na Staging Area para um novo commit.",
+              "correto": true,
+              "justificativa": "O modo --soft retrocede a ponta da branch sem tocar no indice nem na arvore de trabalho, deixando tudo em staging pronto para commit (Slide 133 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "O utilitario git reflog registra a sequencia cronologica local de todas as alteracoes sofridas pelo ponteiro HEAD, constituindo um mecanismo eficaz para restaurar commits orfaos apos a execucao acidental de um git reset --hard.",
+              "correto": true,
+              "justificativa": "O reflog rastreia toda mudanca de ponteiro local e retem os hashes de commits aparentemente perdidos, permitindo recupera-los com facilidade (Slides 136 a 140 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "O comando git stash isola e salva temporariamente em uma pilha de contexto local as alteracoes pendentes no Working Directory e na Staging Area, permitindo que o desenvolvedor alterne de branch com a area de trabalho limpa sem necessidade de realizar commits preliminares ou descartar codigo.",
+              "correto": true,
+              "justificativa": "O stash armazena modificacoes em andamento em uma pilha local, limpando o diretorio de trabalho para alternancia rapida de branches (Slides 146 a 148 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 29,
+          "proposicoes_verdadeiras": [
+            1,
+            4,
+            8,
+            16
+          ]
+        },
+        {
+          "numero": 4,
+          "tema": "SmartNotes - Semantic Versioning (SemVer) e Gerenciamento de Dependencias",
+          "pontos": 2.0,
+          "enunciado": "Considerando a especificacao de Versionamento Semantico (SemVer) e as declaracoes de dependencias gerenciadas no package.json de aplicacoes Node.js, analise as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "De acordo com o SemVer (MAJOR.MINOR.PATCH), a transicao de versao de 5.2.0 para 6.0.0 comunica formalmente aos consumidores do pacote que modificacoes incompativeis de API (breaking changes) foram introduzidas.",
+              "correto": true,
+              "justificativa": "A elevacao de MAJOR sinaliza quebras de compatibilidade retroativa e mudancas na assinatura publica do software (Slides 22 e 23 de smartnotes.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "Ao especificar a dependencia 'express': '^5.2.1', o operador circunflexo (^) autoriza o comando npm update a instalar atualizacoes dentro da mesma versao MAJOR (permitindo a instalacao automatica de versoes como 5.2.2, 5.3.0 ou 5.5.3), porem bloqueia a instalacao da versao 6.0.0.",
+              "correto": true,
+              "justificativa": "O circunflexo permite atualizacoes de MINOR e PATCH na versao especificada, impedindo a subida para o proximo MAJOR (Slide 24 de smartnotes.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "No SemVer, a adicao de novas funcionalidades compativeis com as interfaces vigentes exige a atualizacao do digito MINOR, momento no qual o identificador de PATCH e reiniciado em zero (ex.: a versao 5.1.4 evolui para 5.2.0).",
+              "correto": true,
+              "justificativa": "Incrementos MINOR acrescentam funcionalidades retrocompativeis e exigem a reinicializacao do digito PATCH para zero (Slides 22 e 23 de smartnotes.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "A utilizacao do operador til (~) na declaracao 'express': '~5.2.1' confere maior liberdade de atualizacao que o operador circunflexo (^), pois o til autoriza tanto novas versoes MINOR quanto novas versoes MAJOR no comando npm update.",
+              "correto": false,
+              "justificativa": "O til e mais conservador e restrito que o circunflexo; ele permite exclusivamente atualizacoes de PATCH dentro do mesmo MINOR (Slide 25 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "Caso uma dependencia esteja declarada sob a sintaxe 'express': '~5.2.1', a execucao do comando npm update permitira a atualizacao para correcoes de bugs como 5.2.3 ou 5.2.9, mas impedira a instalacao da versao 5.3.0.",
+              "correto": true,
+              "justificativa": "O operador ~ trava a versao no nivel minor 5.2, aceitando somente incrementos no digito patch 5.2.x (Slide 25 de smartnotes.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        },
+        {
+          "numero": 5,
+          "tema": "SmartNotes - Variaveis de Ambiente, Envalid e Qualidade de Codigo (ESLint e Prettier)",
+          "pontos": 2.0,
+          "enunciado": "A respeito de gestao de variaveis de ambiente, validacao de esquemas de configuracao e ferramentas de qualidade de codigo no ecossistema Node.js/TypeScript, julgue as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "Variaveis de ambiente representam configuracoes de execucao (como credenciais, portas e chaves criptograficas) que devem ser definidas em arquivos locais nao versionados (como .env), os quais devem constar obrigatoriamente no .gitignore, mantendo-se no repositorio um arquivo .env.example para documentar as variaveis requeridas.",
+              "correto": true,
+              "justificativa": "Configuracoes sensiveis residem em .env excluido do Git, enquanto .env.example serve como gabarito publico de variaveis para a equipe (Slides 32 a 37 de smartnotes.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O pacote envalid fornece o metodo cleanEnv, que viabiliza a implementacao de uma validacao estrita em tempo de inicializacao (fail-fast), interrompendo imediatamente o processo com erro descritivo caso o arquivo .env nao forneca as variaveis obrigatorias ou caso os dados nao correspondam aos validadores definidos (como str() ou port()).",
+              "correto": true,
+              "justificativa": "O cleanEnv valida tipagem e presenca de variaveis antes que o servidor suba, lancando excecao caso as regras sejam violadas (Slides 38 a 44 de smartnotes.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "O ESLint e o Prettier exercem papeis identicos e concorrentes: o ESLint e responsavel exclusivamente pela estilizacao de espacos e quebras de linha visuais, ao passo que o Prettier e a ferramenta encarregada de fazer a analise semantica profunda e deteccao de bugs no codigo-fonte.",
+              "correto": false,
+              "justificativa": "Os papeis sao opostos: o ESLint e um Linter de analise estatica e deteccao de bugs/sintaxe; o Prettier e estritamente um Formatador de codigo visual (Slides 45 a 48 de smartnotes.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "No formato moderno de configuracao modular do ESLint (eslint.config.mjs), as regras individuais podem ser ajustadas explicitamente com tres niveis de severidade padronizados: 'off' (desativa a regra), 'warn' (emite advertencia sem falhar a validacao) e 'error' (emite erro impeditivo de validacao).",
+              "correto": true,
+              "justificativa": "As severidades oficiais no ESLint sao off, warn e error, permitindo dosar o rigor da analise por regra (Slides 55 e 56 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "No arquivo .prettierrc, diretivas como 'printWidth': 150, 'singleQuote': true, 'semi': true e 'arrowParens': 'avoid' configuram o comportamento do formatador de codigo, o qual pode ser integrado a editores como o VS Code para reformatar os arquivos automaticamente a cada evento de salvamento.",
+              "correto": true,
+              "justificativa": "O .prettierrc padroniza as regras estilisticas e sua extensao no VS Code formata o codigo automaticamente ao salvar (Slides 60 e 61 de smartnotes.pdf)."
+            }
+          ],
+          "soma_correta": 27,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            8,
+            16
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prova_02",
+      "titulo": "Simulado Somativo 02 - Preparacao para a Prova de Gerencia de Configuracao",
+      "disciplina": "Gerencia de Configuracao",
+      "material_referencia": "Aulas e Slides do Prof. David Fernandes de Oliveira (IC/UFAM)",
+      "elaboracao": "Simulado Independente de Estudos para a Prova",
+      "pontuacao_total": 10.0,
+      "instrucoes": "Cada questao contem 5 proposicoes com valores binarios (01, 02, 04, 08, 16). A resposta corresponde a soma exclusiva das proposicoes verdadeiras. Cada questao vale 2,0 pontos.",
+      "questoes": [
+        {
+          "numero": 1,
+          "tema": "Git - Configuracao de Identidade, Inicializacao e Semantica de Commits",
+          "pontos": 2.0,
+          "enunciado": "A respeito dos passos iniciais de configuracao de ambiente no Git e boas praticas de criacao de historico, analise as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "Apos a instalacao do Git, a configuracao de user.name e user.email via comando git config e essencial, pois o Git incorpora essas informacoes como metadados imutaveis de autoria em cada commit gerado.",
+              "correto": true,
+              "justificativa": "O Git vincula permanentemente nome e email a cada commit para assegurar a rastreabilidade e responsabilidade dos autores (Slide 16 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O comando git init cria um diretorio oculto denominado .git no diretorio raiz do projeto, responsavel por armazenar todos os metadados, configuracoes, objetos blob, arvores e o historico integral de commits.",
+              "correto": true,
+              "justificativa": "O diretorio .git e a base interna do repositorio Git onde reside toda a estrutura do versionamento (Slide 13 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "Mensagens de commit devem ser concisas e estruturadas segundo convencao reconhecida, sendo considerado boa pratica em projetos de software registrar a finalidade da mudanca (ex.: prefixos convencionais como feat, fix, chore, docs).",
+              "correto": true,
+              "justificativa": "A adocao de mensagens descritivas e padronizadas facilita a navegacao no git log e a geracao de changelogs automaticos (Slides 26 a 29 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "A utilizacao do comando git add . adiciona compulsoriamente todos os arquivos do computador ao commit, ignorando quaisquer regras declaradas no arquivo .gitignore.",
+              "correto": false,
+              "justificativa": "O comando git add . respeita estritamente os filtros definidos no .gitignore, indexando somente arquivos rastreaveis nao ignorados (Slides 23 e 30 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "O comando git status e a ferramenta primordial para inspecionar quais arquivos foram modificados no Working Directory, quais estao preparados na Staging Area e quais estao desprovidos de rastreamento (untracked).",
+              "correto": true,
+              "justificativa": "O git status exibe com exatidao o estado das tres areas e arquivos nao monitorados pelo controle de versao (Slides 21, 23 e 36 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        },
+        {
+          "numero": 2,
+          "tema": "Git - Rastreamento, Analise de Diffs e Visualizacao de Topologia com Git Log",
+          "pontos": 2.0,
+          "enunciado": "Sobre tecnicas de inspecao de diferencas e historico de commits no Git, julgue as afirmacoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "O comando git diff sem argumentos adicionais exibe as diferencas pontuais entre o Working Directory e a Staging Area, isto e, as alteracoes feitas nos arquivos que ainda nao foram preparadas para commit.",
+              "correto": true,
+              "justificativa": "Por padrao, git diff compara o diretorio de trabalho com o indice; para comparar o indice com o ultimo commit usa-se --staged (Slide 42 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "A execucao de git log --oneline resume cada commit em uma unica linha composta pelo hash abreviado e pelo texto da primeira linha da mensagem de commit.",
+              "correto": true,
+              "justificativa": "A flag --oneline condensa a exibicao para proporcionar uma visualizacao rapida do historico recente (Slide 41 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "O modificador --graph no comando git log renderiza uma representacao textual em arte ASCII das ramificacoes e juncoes da arvore de commits, permitindo compreender a topologia de branches mescladas.",
+              "correto": true,
+              "justificativa": "O --graph desenha graficamente a convergencia e divergencia de branches e commits de merge (Slides 41 e 67 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "O comando git diff --staged e equivalente a git commit --amend, efetuando a substituicao automatica do commit anterior sem necessidade de intervencao do usuario.",
+              "correto": false,
+              "justificativa": "git diff --staged apenas visualiza as alteracoes indexadas no staging em comparacao com o HEAD; nao altera nem cria commits (Slide 42 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "Linhas iniciadas com o caractere cerquilha (#) no arquivo .gitignore sao interpretadas como comentarios pelo Git e desconsideradas na definicao dos padroes de exclusao.",
+              "correto": true,
+              "justificativa": "Linhas com '#' no .gitignore sao comentarios explicativos que documentam os motivos de exclusao de pastas e arquivos (Slide 31 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        },
+        {
+          "numero": 3,
+          "tema": "Git - Repositorios Remotos, Upstream Tracking, Git Fetch e Git Pull",
+          "pontos": 2.0,
+          "enunciado": "Em relacao a integracao de repositorios locais com servidores remotos (GitHub/GitLab), avalie as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "O comando git clone cria um repositorio local identico ao remoto, configurando automaticamente um vinculo de remote denominado origin e baixando todos os branches e historico existentes.",
+              "correto": true,
+              "justificativa": "O clone copia o repositorio integral e estabelece origin como apelido padrao do endereco remoto (Slides 89 e 90 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O comando git fetch busca os objetos e referencias do repositorio remoto e os incorpora compulsoriamente a branch local de trabalho, sobrescrevendo quaisquer alteracoes nao salvas do usuario.",
+              "correto": false,
+              "justificativa": "O git fetch apenas baixa dados para o repositorio local atualizando remote-tracking branches (como origin/main); ele nao altera os arquivos do working directory nem a branch local corrente (Slide 104 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "O comando git pull e essencialmente uma combinacao logica sequencial de duas operacoes do Git: um git fetch seguido por um git merge da branch rastreada correspondente.",
+              "correto": true,
+              "justificativa": "O git pull sincroniza os metadados remotos (fetch) e imediatamente mescla as alteracoes na branch local ativa (merge) (Slide 105 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "O parametro -u (ou --set-upstream) no comando git push -u origin <branch> estabelece uma ligacao direta de rastreamento entre a branch local e a branch remota, simplificando os proximos comandos para apenas git push ou git pull.",
+              "correto": true,
+              "justificativa": "A flag -u configura a associacao upstream permanente para aquela branch (Slide 96 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "Um repositorio Git requer conexao permanente e estavel com a internet para executar operacoes como git commit, git branch, git log e git reset.",
+              "correto": false,
+              "justificativa": "Sendo distribuido, todas as operacoes de commit, criacao de branches, consulta de log e reset sao puramente locais e offline (Slides 7 e 8 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 13,
+          "proposicoes_verdadeiras": [
+            1,
+            4,
+            8
+          ]
+        },
+        {
+          "numero": 4,
+          "tema": "SmartNotes - Principios 12-Factor, Variaveis de Ambiente e Biblioteca Dotenv",
+          "pontos": 2.0,
+          "enunciado": "A respeito do armazenamento de configuracoes de aplicacao e do uso do pacote dotenv em projetos Node.js, analise as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "O manifesto Twelve-Factor App prescreve a estrita separacao entre codigo-fonte e dados de configuracao, preconizando que parametros dependentes de ambiente devam ser injetados exclusivamente via variaveis de ambiente.",
+              "correto": true,
+              "justificativa": "Guardar configuracoes em variaveis de ambiente evita recompilacao e vazamento de chaves entre ambientes de desenvolvimento, homologacao e producao (Slide 32 de smartnotes.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "No Node.js, o pacote dotenv e empregado para ler pares chave=valor a partir de um arquivo de texto local (padrao .env) e popula-los automaticamente na variavel global process.env no momento da execucao.",
+              "correto": true,
+              "justificativa": "O metodo dotenv.config() analisa o arquivo .env e injeta as chaves em process.env para acesso programatico (Slides 34 a 36 de smartnotes.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "E recomendavel comitar o arquivo .env de producao no GitHub com o intuito de viabilizar deploys automatizados sem demandar configuracoes adicionais no servidor de hospedagem.",
+              "correto": false,
+              "justificativa": "Arquivos .env contem senhas, segredos e chaves que nunca devem ser expostos em repositorios versionados, devendo constar impreterivelmente no .gitignore (Slide 37 de smartnotes.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "A adocao de um arquivo versionado chamado .env.example serve como gabarito de configuracao para novos desenvolvedores, listando as variaveis necessarias sem expor valores ou senhas confidenciais.",
+              "correto": true,
+              "justificativa": "O .env.example informa a lista de chaves obrigatorias para que cada membro configure seu proprio .env local (Slide 37 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "Caso a variavel PORT nao esteja definida no ambiente ou no arquivo .env, construcoes como const PORT = process.env.PORT || 3000 garantem que a aplicacao adote uma porta padrao alternativa em vez de falhar abruptamente.",
+              "correto": true,
+              "justificativa": "O operador de fallback '||' define um valor alternativo seguro caso a propriedade nao esteja presente em process.env (Slides 35 e 36 de smartnotes.pdf)."
+            }
+          ],
+          "soma_correta": 27,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            8,
+            16
+          ]
+        },
+        {
+          "numero": 5,
+          "tema": "SmartNotes - Linters versus Formatadores, Ecossistema e Integracao com Editores",
+          "pontos": 2.0,
+          "enunciado": "Sobre a padronizacao de codigo-fonte, ecossistema de linters e integracao com ferramentas de desenvolvimento, julgue as assertivas:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "Em Python, ferramentas como Ruff ou Pylint atuam como linters de analise de codigo, ao passo que Black ou Ruff Formatter sao utilizados especificamente como formatadores de codigo.",
+              "correto": true,
+              "justificativa": "A listagem comparativa de linguagens define Ruff/Pylint para analise estatica e Black/Ruff Formatter para diagramacao visual automatica (Slides 46 e 48 de smartnotes.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "Em linguagens como Go e Rust, as ferramentas oficiais padroes para formatacao automatica de codigo sao, respectivamente, gofmt e rustfmt.",
+              "correto": true,
+              "justificativa": "Ambos os ecossistemas padronizam a formatacao nativamente atraves de gofmt e rustfmt (Slide 48 de smartnotes.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "O arquivo .prettierignore serve para instruir o Prettier a nao formatar determinados diretorios e arquivos compilados ou externos, tais como build/, dist/ ou dependencias de terceiros.",
+              "correto": true,
+              "justificativa": "Assim como o .gitignore, o .prettierignore poupa diretorios de saida gerados ou bibliotecas de reformatacoes desnecessarias (Slides 60 e 61 de smartnotes.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "O utilitario ESLint e restrito estritamente a arquivos JavaScript simples, sendo incapaz de efetuar a verificacao estatica em bases de codigo TypeScript.",
+              "correto": false,
+              "justificativa": "O pacote typescript-eslint permite ao ESLint analisar codigo TypeScript de forma completa, integrando regras recomendadas no eslint.config.mjs (Slides 52 e 58 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "A definicao de scripts no package.json como 'lint': 'eslint src/' e 'format': 'prettier --write src/' permite incorporar facilmente a verificacao e correcao de estilo nas rotinas de integracao continua (CI) da equipe.",
+              "correto": true,
+              "justificativa": "Os scripts encapsulam a chamada aos utilitarios e uniformizam sua execucao em ambientes de desenvolvimento e pipelines de automacao (Slide 62 de smartnotes.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prova_03",
+      "titulo": "Simulado Somativo 03 - Preparacao para a Prova de Gerencia de Configuracao",
+      "disciplina": "Gerencia de Configuracao",
+      "material_referencia": "Aulas e Slides do Prof. David Fernandes de Oliveira (IC/UFAM)",
+      "elaboracao": "Simulado Independente de Estudos para a Prova",
+      "pontuacao_total": 10.0,
+      "instrucoes": "Cada questao contem 5 proposicoes com valores binarios (01, 02, 04, 08, 16). A resposta corresponde a soma exclusiva das proposicoes verdadeiras. Cada questao vale 2,0 pontos.",
+      "questoes": [
+        {
+          "numero": 1,
+          "tema": "Git - Desfazimento de Alteracoes e Diferencas entre Modos de Reset",
+          "pontos": 2.0,
+          "enunciado": "Em relacao as operacoes de cancelamento e desfazimento de mudancas no Git, julgue as assertivas a seguir:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "O comando git restore <arquivo> descarta as modificacoes nao indexadas de um arquivo no Working Directory, revertendo-o ao estado atualmente registrado na Staging Area ou no ultimo commit.",
+              "correto": true,
+              "justificativa": "O restore restaura o arquivo de trabalho com base no index, descartando edicoes locais nao salvas (Slide 120 e 121 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O comando git reset HEAD <arquivo> retira o arquivo indicado da Staging Area (desindexacao), preservando integralmente o conteudo modificado no Working Directory.",
+              "correto": true,
+              "justificativa": "A operacao retira o arquivo do estado staged para modified sem perder o trabalho editado pelo desenvolvedor (Slide 122 a 124 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "O modo padrao do comando git reset (equivalente a git reset --mixed) move o ponteiro da branch de volta ao commit informado e remove as alteracoes da Staging Area, mantendo as modificacoes no Working Directory.",
+              "correto": true,
+              "justificativa": "O comportamento padrao do reset e o --mixed, que desfaz a preparacao no index mantendo os arquivos no disco para revisao (Slide 134 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "A execucao de git reset --hard HEAD~1 e uma operacao branda que cria um commit de reversao sem eliminar quaisquer arquivos do disco.",
+              "correto": false,
+              "justificativa": "O reset --hard e uma operacao destrutiva que descarta sumariamente tanto a staging area quanto as edicoes no working directory, sem gerar novo commit (Slide 135 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "O comando git commit --amend permite incorporar novos arquivos da Staging Area ao ultimo commit realizado ou alterar a mensagem desse commit, sem gerar um commit adicional no historico.",
+              "correto": true,
+              "justificativa": "O --amend retifica o commit mais recente combinando alteracoes pendentes no index com o snapshot imediatamente anterior (Slides 143 a 145 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        },
+        {
+          "numero": 2,
+          "tema": "Git - Detached HEAD, Diagnostico de Conflitos e Aborto de Merge",
+          "pontos": 2.0,
+          "enunciado": "A respeito de situacoes excepcionais de navegacao e resolucao de conflitos no Git, avalie as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "No estado de Detached HEAD, qualquer novo commit gerado nao pertence a nenhuma branch formal, ficando vulneravel a ser descartado pelo garbage collector do Git caso o usuario mude de branch sem criar uma referencia nominal.",
+              "correto": true,
+              "justificativa": "Sem uma branch nominal apontando para ele, o commit em detached HEAD torna-se orfao quando o HEAD se desloca (Slide 56 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "Caso ocorram conflitos complexos durante uma operacao de integracao e o desenvolvedor opte por desistir do processo, o comando git merge --abort interrompe a mesclagem e restaura o estado exato anterior ao comando de merge.",
+              "correto": true,
+              "justificativa": "O comando git merge --abort limpa os marcadores de conflito e restabelece a branch local ao momento anterior a solicitacao de integracao (Slide 83 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "Quando um conflito de merge acontece, os arquivos conflitantes continuam compativeis para compilacao imediata, pois o compilador ignora nativamente os caracteres <<<<<<< e >>>>>>>.",
+              "correto": false,
+              "justificativa": "Os marcadores geram graves erros sintaticos na linguagem de programacao e impedem a compilacao/execucao do codigo ate serem removidos manualmente (Slides 76 e 77 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "A expressao HEAD~2 referencia o commit correspondente ao 'avo' do commit atualmente ativo.",
+              "correto": true,
+              "justificativa": "A notacao de til com numero (HEAD~n) navega retroativamente na linhagem de ancestrais primarios (Slide 131 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "O utilitario git stash pop restaura as modificacoes mais recentes salvas na pilha de stash e as remove automaticamente dessa pilha de armazenamento temporario.",
+              "correto": true,
+              "justificativa": "Diferente de git stash apply (que mantem na pilha), o pop aplica o stash e o desempilha imediatamente (Slide 148 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 27,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            8,
+            16
+          ]
+        },
+        {
+          "numero": 3,
+          "tema": "Git - Integracao com Rebase versus Three-Way Merge e Regra de Ouro",
+          "pontos": 2.0,
+          "enunciado": "Comparando as abordagens de integracao de codigo no Git por git merge e git rebase, julgue as assertivas:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "O git merge e a abordagem preferencial quando se deseja preservar a fidelidade historica e cronologica das bifurcacoes ou quando se esta integrando branches colaborativas de longa duracao.",
+              "correto": true,
+              "justificativa": "O merge preserva o contexto de ramificacao e nao distorce a linha do tempo colaborativa (Slide 116 de 1_git.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "O git rebase e frequentemente utilizado em branches locais de feature antes do merge na main para incorporar atualizacoes recentes da branch base e evitar commits de merge desnecessarios.",
+              "correto": true,
+              "justificativa": "O rebase local lineariza a branch do desenvolvedor, tornando a posterior integracao na base limpa e direta (Slides 112 a 115 de 1_git.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "Ao sofrer rebase, os commits originais mantem seus mesmos identificadores de hash SHA-1 inalterados, viabilizando o pareamento perfeito com branches remotas clonadas por terceiros.",
+              "correto": false,
+              "justificativa": "O rebase calcula novos hashes SHA-1 para cada commit reaplicado, destruindo a compatibilidade com colaboradores que tenham os hashes anteriores (Slides 117 e 118 de 1_git.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "Se um commit for descartado indevidamente por um git reset --hard, o comando git log sem argumentos especiais sera a ferramenta indicada para localiza-lo e resgata-lo.",
+              "correto": false,
+              "justificativa": "O git log apenas percorre commits alcancaveis na arvore atual. Commits orfaos so podem ser localizados via git reflog (Slides 136 a 139 de 1_git.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "Em uma operacao de merge de tres vias (three-way merge), o Git utiliza tres pontos estruturais: os dois commits de topo das branches que estao sendo mescladas e o commit ancestral comum mais recente entre elas.",
+              "correto": true,
+              "justificativa": "O algoritmo de 3 vias baseia sua reconciliacao na analise diferencial entre o ancestral comum e as duas pontas divergentes (Slides 61 e 62 de 1_git.pdf)."
+            }
+          ],
+          "soma_correta": 19,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            16
+          ]
+        },
+        {
+          "numero": 4,
+          "tema": "SmartNotes - SemVer Estrito e Resolucao de Versoes no Ecossistema NPM",
+          "pontos": 2.0,
+          "enunciado": "A respeito das convencoes de numeracao de software e especificacao SemVer (Semantic Versioning), avalie as proposicoes:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "Uma versao SemVer obedece rigidamente ao formato MAJOR.MINOR.PATCH, no qual cada segmento possui significado semantico formal definido pelo impacto da mudanca no sistema.",
+              "correto": true,
+              "justificativa": "A semantica do versionamento divide as modificacoes entre quebras de contrato, adicoes funcionais e correcoes de bugs (Slide 22 de smartnotes.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "A evolucao de 5.1.0 para 5.1.1 representa uma correcao de falha (patch) que nao introduz novas funcionalidades e preserva completa compatibilidade retroativa com versoes anteriores.",
+              "correto": true,
+              "justificativa": "PATCH destina-se exclusivamente a correcoes de bugs estaveis e retrocompativeis (Slides 22 e 23 de smartnotes.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "A declaracao de versao 'express': '5.2.1' (sem prefixos como ^ ou ~) impoe a instalacao estrita e exata da versao 5.2.1, nao sofrendo atualizacoes automaticas via npm update.",
+              "correto": true,
+              "justificativa": "Sem prefixos de intervalo de versao, a dependencia fica fixada (pinned) de maneira deterministica no numero informado (Slides 24 e 25 de smartnotes.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "O operador de dependencia ^ (circunflexo) instalado na versao ^5.2.1 autoriza o npm update a instalar uma versao 6.0.0 lancada posteriormente pelos mantenedores da biblioteca.",
+              "correto": false,
+              "justificativa": "O circunflexo bloqueia categoricamente versoes com MAJOR diferente, impedindo que breaking changes sejam instaladas involuntariamente (Slide 24 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "O operador ~ (til) e mais conservador do que o circunflexo (^), permitindo ao npm instalar apenas novas versoes de correcao de bug (PATCHs), protegendo a aplicacao contra alteracoes de comportamento em funcionalidades novas.",
+              "correto": true,
+              "justificativa": "O til confina o npm update estritamente a correcoes de falhas na mesma versao minor (Slide 25 de smartnotes.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        },
+        {
+          "numero": 5,
+          "tema": "SmartNotes - Validacao com Envalid e Configuracao Flat no ESLint",
+          "pontos": 2.0,
+          "enunciado": "No contexto da configuracao robusta de servidores Node.js com TypeScript, analise as proposicoes sobre o envalid e o ESLint:",
+          "proposicoes": [
+            {
+              "valor": 1,
+              "texto": "A biblioteca envalid impede falhas silenciosas na aplicacao por meio da abordagem fail-fast, garantindo que o servidor nao inicie se configuracoes vitais de conexao ou seguranca estiverem ausentes.",
+              "correto": true,
+              "justificativa": "O envalid aborta a execucao imediatamente no bootstrap caso os requisitos do esquema de variaveis nao sejam cumpridos (Slides 38 a 44 de smartnotes.pdf)."
+            },
+            {
+              "valor": 2,
+              "texto": "A funcao cleanEnv do envalid aceita validadores de tipo como str() para cadeias de caracteres e port() para portas de rede com limites numericos validos e valores default opcionais.",
+              "correto": true,
+              "justificativa": "Os validadores embutidos asseguram tipos corretos como portas validas e strings obrigatorias ou com valores padrao (Slide 40 e 41 de smartnotes.pdf)."
+            },
+            {
+              "valor": 4,
+              "texto": "No novo sistema de configuracao flat do ESLint (arquivo eslint.config.mjs), e possivel definir regras especificas para o compilador TypeScript atraves do pacote typescript-eslint.",
+              "correto": true,
+              "justificativa": "O arquivo modular eslint.config.mjs carrega as recomendacoes de typescript-eslint para aplicar analise estatica ao TypeScript (Slides 52 a 58 de smartnotes.pdf)."
+            },
+            {
+              "valor": 8,
+              "texto": "Configurar uma regra no ESLint com o valor 'off' faz com que o linter interrompa a compilacao do projeto emitindo um codigo de erro fatal para o sistema operacional.",
+              "correto": false,
+              "justificativa": "O modificador 'off' desativa inteiramente a regra, fazendo com que o ESLint a ignore sem disparar avisos ou erros (Slides 55 e 56 de smartnotes.pdf)."
+            },
+            {
+              "valor": 16,
+              "texto": "A utilizacao da extensao oficial do ESLint ou Prettier no VS Code permite identificar violacoes de regras em tempo real no editor e reformatar o arquivo automaticamente ao pressionar Ctrl+S.",
+              "correto": true,
+              "justificativa": "A integracao no editor proporciona feedback imediato ao desenvolvedor e formatacao automatica ao salvar arquivos (Slides 51 e 61 de smartnotes.pdf)."
+            }
+          ],
+          "soma_correta": 23,
+          "proposicoes_verdadeiras": [
+            1,
+            2,
+            4,
+            16
+          ]
+        }
+      ]
+    }
+  ]
+}
