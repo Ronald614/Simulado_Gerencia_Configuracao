@@ -13,8 +13,64 @@
 <body class="bg-base-300 text-base-content min-h-screen">
   <div id="app" class="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
 
-    <!-- Navbar / Header -->
-    <header class="navbar bg-base-200 shadow-lg rounded-box px-4 flex-wrap gap-2 justify-between border border-base-100">
+    <!-- Toast de Notificacao Pronto -->
+    <div v-if="toastMsg" class="toast toast-top toast-end z-50">
+      <div class="alert alert-info shadow-lg text-xs font-bold py-2 px-4">
+        <span>{{ toastMsg }}</span>
+      </div>
+    </div>
+
+    <!-- Modal Pronto de Resultado da Avaliacao -->
+    <dialog id="resultado_modal" class="modal modal-bottom sm:modal-middle" :class="{'modal-open': modalAberto}">
+      <div class="modal-box bg-base-200 border border-base-100 text-center space-y-4">
+        <h3 class="font-extrabold text-2xl text-primary">Resultado do Simulado</h3>
+        <p class="text-xs text-base-content/70">
+          Desempenho apurado na {{ provaAtiva ? provaAtiva.id.replace('prova_0', 'Prova ') : '' }}
+        </p>
+
+        <!-- Componente Radial Progress do DaisyUI -->
+        <div class="flex justify-center my-4">
+          <div 
+            class="radial-progress text-primary font-black text-2xl" 
+            :style="'--value:' + Math.round((pontosObtidos / 10.0) * 100) + '; --size:8rem; --thickness: 8px;'"
+            role="progressbar"
+          >
+            {{ pontosObtidos.toFixed(1) }} <span class="text-xs font-normal">/ 10</span>
+          </div>
+        </div>
+
+        <div class="stats bg-base-100 shadow border border-base-300 w-full">
+          <div class="stat p-3">
+            <div class="stat-title text-xs font-bold uppercase">Questoes Corretas</div>
+            <div class="stat-value text-xl font-bold text-success">{{ totalAcertos }} / 5</div>
+            <div class="stat-desc text-xs font-semibold">{{ (totalAcertos * 20) }}% de aproveitamento</div>
+          </div>
+          <div class="stat p-3">
+            <div class="stat-title text-xs font-bold uppercase">Status</div>
+            <div class="stat-value text-xl font-bold" :class="pontosObtidos >= 7 ? 'text-success' : 'text-warning'">
+              {{ pontosObtidos >= 7 ? 'Aprovado' : 'Revisar' }}
+            </div>
+            <div class="stat-desc text-xs font-semibold">Media minima: 7,0 pts</div>
+          </div>
+        </div>
+
+        <p class="text-xs text-base-content/80 text-left bg-base-100 p-3 rounded-lg border border-base-300">
+          As justificativas tecnicas de cada proposicao foram reveladas abaixo de cada questao no caderno de questoes.
+        </p>
+
+        <div class="modal-action justify-center">
+          <button @click="modalAberto = false" class="btn btn-primary btn-sm px-6 font-bold">
+            Ver Correcoes Detalhadas
+          </button>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button @click="modalAberto = false">fechar</button>
+      </form>
+    </dialog>
+
+    <!-- Navbar / Header Pronto -->
+    <header class="navbar bg-base-200 shadow-lg rounded-box px-4 flex-wrap gap-3 justify-between border border-base-100">
       <div class="flex items-center gap-3">
         <span class="badge badge-primary font-bold text-xs uppercase tracking-wider">IC / UFAM</span>
         <div>
@@ -27,12 +83,25 @@
         </div>
       </div>
 
-      <!-- Tabs de Navegacao Prontas -->
-      <div class="tabs tabs-boxed bg-base-100">
-        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/'}" @click="navegar('/')">Inicio</a>
-        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova1'}" @click="navegar('/prova1')">Prova 01</a>
-        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova2'}" @click="navegar('/prova2')">Prova 02</a>
-        <a class="tab text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova3'}" @click="navegar('/prova3')">Prova 03</a>
+      <!-- Seletor de Temas e Tabs Prontas -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Theme Select Pronto -->
+        <select v-model="temaEscolhido" @change="trocarTema" class="select select-bordered select-xs font-semibold bg-base-100">
+          <option value="dark">Dark</option>
+          <option value="night">Night</option>
+          <option value="dim">Dim</option>
+          <option value="synthwave">Synthwave</option>
+          <option value="forest">Forest</option>
+          <option value="dracula">Dracula</option>
+          <option value="corporate">Light (Corporate)</option>
+        </select>
+
+        <div class="tabs tabs-boxed bg-base-100">
+          <a class="tab text-xs md:text-sm font-semibold" :class="{'tab-active': rotaAtual === '/'}" @click="navegar('/')">Inicio</a>
+          <a class="tab text-xs md:text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova1'}" @click="navegar('/prova1')">Prova 01</a>
+          <a class="tab text-xs md:text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova2'}" @click="navegar('/prova2')">Prova 02</a>
+          <a class="tab text-xs md:text-sm font-semibold" :class="{'tab-active': rotaAtual === '/prova3'}" @click="navegar('/prova3')">Prova 03</a>
+        </div>
       </div>
     </header>
 
@@ -49,7 +118,8 @@
       <div class="hero bg-base-200 rounded-box border border-base-100 p-6 md:p-8 shadow-md">
         <div class="hero-content text-left max-w-3xl">
           <div>
-            <h1 class="text-3xl font-extrabold text-primary mb-2">Simulados no Formato Somativo</h1>
+            <div class="badge badge-secondary font-bold text-xs uppercase mb-2">Simulados Interativos</div>
+            <h1 class="text-3xl font-extrabold text-primary mb-2">Treinamento Somativo para a Prova</h1>
             <p class="text-sm md:text-base text-base-content/80 leading-relaxed mb-4">
               Cada questao apresenta 5 proposicoes com valores binarios em potencias de base 2:
               <span class="font-mono font-bold text-secondary">(01), (02), (04), (08) e (16)</span>.
@@ -57,9 +127,9 @@
               Cada questao vale <strong>2,0 pontos</strong>, totalizando <strong>10,0 pontos</strong>.
             </p>
             <div class="flex flex-wrap gap-2">
-              <span class="badge badge-outline">5 Questoes por Simulado</span>
+              <span class="badge badge-outline">3 Provas Completas</span>
               <span class="badge badge-outline">Soma Unica Binaria</span>
-              <span class="badge badge-outline">Correcao Instantanea com Justificativa</span>
+              <span class="badge badge-outline">Gabarito Justificado Item a Item</span>
             </div>
           </div>
         </div>
@@ -79,9 +149,12 @@
                 {{ prova.questoes.map(q => q.tema.split(' - ')[1] || q.tema).join(' | ') }}
               </p>
             </div>
-            <div class="card-actions mt-4">
-              <button @click="navegar('/' + prova.id.replace('_', ''))" class="btn btn-primary btn-sm w-full font-bold">
+            <div class="card-actions mt-4 flex gap-2">
+              <button @click="navegar('/' + prova.id.replace('_', ''))" class="btn btn-primary btn-sm flex-1 font-bold">
                 Abrir {{ prova.id.replace('prova_0', 'Prova ') }}
+              </button>
+              <button @click="copiarLink('/' + prova.id.replace('_', ''))" class="btn btn-outline btn-sm font-semibold px-3" title="Copiar link para amigos">
+                Link
               </button>
             </div>
           </div>
@@ -92,16 +165,34 @@
       <div class="card bg-base-200 border border-base-100 p-4 shadow-sm">
         <h3 class="text-sm font-bold text-base-content/90 mb-2">Endpoints Prontos para Compartilhar com Amigos:</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono">
-          <a @click="navegar('/prova1')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova1</a>
-          <a @click="navegar('/prova2')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova2</a>
-          <a @click="navegar('/prova3')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova3</a>
-          <a href="/api/provas" target="_blank" class="btn btn-outline btn-xs justify-start">/api/provas (JSON)</a>
+          <a @click="navegar('/prova1')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova1 (Simulado 1)</a>
+          <a @click="navegar('/prova2')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova2 (Simulado 2)</a>
+          <a @click="navegar('/prova3')" class="btn btn-outline btn-xs justify-start cursor-pointer">/prova3 (Simulado 3)</a>
+          <a href="/api/provas" target="_blank" class="btn btn-outline btn-xs justify-start">/api/provas (JSON API)</a>
         </div>
       </div>
     </main>
 
     <!-- Tela do Simulado Selecionado -->
     <main v-else-if="provaAtiva" class="space-y-6">
+
+      <!-- Passos / Timeline Pronta do DaisyUI -->
+      <div class="bg-base-200 p-4 rounded-box border border-base-100 shadow-sm space-y-3">
+        <div class="flex justify-between items-center text-xs font-bold text-base-content/70">
+          <span>Progresso do Simulado</span>
+          <span>{{ questoesRespondidasCount }} de 5 respondidas ({{ (questoesRespondidasCount * 20) }}%)</span>
+        </div>
+        <!-- Progress Bar Pronta do DaisyUI -->
+        <progress class="progress progress-primary w-full h-2.5" :value="questoesRespondidasCount" max="5"></progress>
+
+        <!-- Steps do DaisyUI -->
+        <ul class="steps steps-horizontal w-full text-xs font-semibold">
+          <li v-for="i in 5" :key="i" class="step" :class="{'step-primary': (respostasUsuario[i] || []).length > 0}">
+            Q{{ i }}
+          </li>
+        </ul>
+      </div>
+
       <!-- Cabecalho da Prova e Painel de Pontos -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-base-200 p-5 rounded-box border border-base-100 shadow-sm">
         <div>
@@ -120,7 +211,7 @@
               {{ conferido ? pontosObtidos.toFixed(1) : '--' }} <span class="text-xs font-normal text-base-content/60">/ 10.0</span>
             </div>
             <div class="stat-desc text-xs font-semibold">
-              {{ conferido ? `${totalAcertos}/5 questoes corretas` : 'Nao submetido' }}
+              {{ conferido ? `${totalAcertos}/5 corretas` : 'Em andamento' }}
             </div>
           </div>
         </div>
@@ -157,9 +248,10 @@
                   :value="p.valor"
                   v-model="respostasUsuario[q.numero]"
                 />
-                <span class="badge badge-sm font-mono font-bold text-secondary shrink-0">
+                <!-- Kbd Component do DaisyUI -->
+                <kbd class="kbd kbd-sm font-mono font-bold text-secondary shrink-0">
                   ({{ String(p.valor).padStart(2, '0') }})
-                </span>
+                </kbd>
                 <span class="text-xs md:text-sm text-base-content/90 flex-1 leading-snug">
                   {{ p.texto }}
                 </span>
@@ -167,10 +259,10 @@
             </div>
 
             <!-- Painel de Soma da Questao -->
-            <div class="flex justify-between items-center bg-base-100 p-3 rounded-lg border border-base-300">
+            <div class="flex justify-between items-center bg-base-100 p-3 rounded-lg border border-base-300 flex-wrap gap-2">
               <div class="flex items-center gap-2">
                 <span class="text-xs font-bold uppercase tracking-wider text-base-content/70">Sua Soma:</span>
-                <span class="font-mono font-extrabold text-lg text-primary bg-base-300 px-3 py-0.5 rounded">
+                <span class="font-mono font-extrabold text-lg text-primary bg-base-300 px-3 py-0.5 rounded border border-base-200">
                   {{ String(calcularSomaUsuario(q.numero)).padStart(2, '0') }}
                 </span>
               </div>
@@ -222,7 +314,7 @@
             Total Respondido: {{ questoesRespondidasCount }} / 5 questoes
           </div>
           <div class="text-xs text-base-content/60">
-            Marque as proposicoes que julgar verdadeiras em cada questao.
+            Marque as proposicoes verdadeiras e confira o gabarito.
           </div>
         </div>
         <div class="flex items-center gap-3">
@@ -254,6 +346,9 @@
         const provaAtiva = ref(null);
         const respostasUsuario = ref({ 1: [], 2: [], 3: [], 4: [], 5: [] });
         const conferido = ref(false);
+        const modalAberto = ref(false);
+        const toastMsg = ref('');
+        const temaEscolhido = ref('dark');
 
         const carregarDados = async () => {
           try {
@@ -299,6 +394,7 @@
             provaAtiva.value = encontrada;
             respostasUsuario.value = { 1: [], 2: [], 3: [], 4: [], 5: [] };
             conferido.value = false;
+            modalAberto.value = false;
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         };
@@ -340,11 +436,32 @@
 
         const conferirGabarito = () => {
           conferido.value = true;
+          modalAberto.value = true;
         };
 
         const resetarRespostas = () => {
           respostasUsuario.value = { 1: [], 2: [], 3: [], 4: [], 5: [] };
           conferido.value = false;
+          modalAberto.value = false;
+          dispararToast('Respostas limpas com sucesso.');
+        };
+
+        const copiarLink = (caminho) => {
+          const url = window.location.origin + caminho;
+          navigator.clipboard.writeText(url).then(() => {
+            dispararToast('Link copiado para a area de transferencia: ' + url);
+          });
+        };
+
+        const dispararToast = (msg) => {
+          toastMsg.value = msg;
+          setTimeout(() => {
+            toastMsg.value = '';
+          }, 3500);
+        };
+
+        const trocarTema = () => {
+          document.documentElement.setAttribute('data-theme', temaEscolhido.value);
         };
 
         onMounted(() => {
@@ -358,13 +475,18 @@
           provaAtiva,
           respostasUsuario,
           conferido,
+          modalAberto,
+          toastMsg,
+          temaEscolhido,
           navegar,
           calcularSomaUsuario,
           totalAcertos,
           pontosObtidos,
           questoesRespondidasCount,
           conferirGabarito,
-          resetarRespostas
+          resetarRespostas,
+          copiarLink,
+          trocarTema
         };
       }
     }).mount('#app');
