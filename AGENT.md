@@ -115,11 +115,24 @@ Para proporcionar uma aplicacao leve, sem etapa de compilacao (`zero-build`) e c
 ## 7. Instrucoes para Deploy na Vercel e GitHub
 
 ### Deploy na Vercel
-1. Instale a Vercel CLI (ou conecte o repositorio via painel em vercel.com):
-   ```bash
-   npx vercel
-   ```
-2. A configuracao presente no `vercel.json` roteia automaticamente as chamadas sem necessidade de build steps adicionais.
+
+**Projeto oficial (unico):** `simulado-gerencia-configuracao`, no time `ronald-team`.
+**Dominio de producao:** https://simulado-gerencia-configuracao.vercel.app
+
+- O projeto antigo `site_estudos` (dominio `siteestudos-*.vercel.app`) **nao deve ser usado**. Nao fazer deploy, redeploy nem promote nele.
+- Antes de qualquer deploy, confirmar que a pasta esta ligada ao projeto certo: `.vercel/project.json` deve ter `"projectName":"simulado-gerencia-configuracao"`. Se estiver diferente, rodar `npx vercel link --project simulado-gerencia-configuracao`.
+- Deploy de producao, a partir da raiz do repositorio:
+  ```bash
+  npx vercel --prod
+  ```
+- Nao usar o botao "Redeploy" em deploys antigos: ele reaproveita o codigo antigo (ex.: um `vercel.json` com propriedade invalida) e falha de novo.
+- A configuracao presente no `vercel.json` roteia automaticamente as chamadas sem necessidade de build steps adicionais. Ele nao aceita a propriedade `public` (o build falha na validacao do schema).
+
+### Seguranca
+
+- Tokens e credenciais da Vercel (`VERCEL_OIDC_TOKEN`, `.env.local`) e a pasta `.vercel/` ficam **somente na maquina local** e sao ignorados pelo `.gitignore` (`.env*` e `.vercel`). Nunca comitar esses arquivos, nunca usar `git add -f` neles e nunca copiar valores de token para este documento ou para qualquer outro arquivo versionado.
+- Se um token vazar, gerar outro com `npx vercel env pull` (ou revogar no painel da Vercel).
+- Commits deste repositorio nao levam linhas de coautoria (`Co-Authored-By`).
 
 ### Versionamento no GitHub
 ```bash
