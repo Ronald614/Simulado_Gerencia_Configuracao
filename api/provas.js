@@ -11,9 +11,9 @@ module.exports = (req, res) => {
   }
 
   try {
-    let filePath = path.join(__dirname, '..', 'artefatos', 'provas.json');
+    let filePath = path.join(__dirname, '..', 'public', 'provas.json');
     if (!fs.existsSync(filePath)) {
-      filePath = path.join(__dirname, '..', 'public', 'provas.json');
+      filePath = path.join(__dirname, '..', 'artefatos', 'provas.json');
     }
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const data = JSON.parse(fileContent);

@@ -1,0 +1,8 @@
+# Ignorar arquivos pesados e scripts locais no deploy da Vercel
+slides/
+transcricoes/
+scripts/
+requirements.txt
+.venv/
+*.py
+*.pdf
