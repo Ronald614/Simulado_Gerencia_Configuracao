@@ -3,362 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulados Somativos - Gerencia de Configuracao (UFAM)</title>
-  <!-- Tailwind CSS via CDN -->
+  <meta name="color-scheme" content="light dark">
+  <title>Simulados Gerencia de Configuracao</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Vue 3 via CDN -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="/vendor/vue.global.prod.js"></script>
   <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-            }
-          }
-        }
-      }
-    }
+    tailwind.config = { darkMode: 'media' };
   </script>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-    input[type="checkbox"] {
-      accent-color: #4f46e5;
-    }
-  </style>
+  <style>[v-cloak] { display: none; }</style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
-  <div id="app" class="max-w-4xl mx-auto px-4 py-8 space-y-6">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+  <div id="app" v-cloak class="max-w-3xl mx-auto px-4 py-6 pb-24">
 
-    <!-- Notificacao Toast Limpa -->
-    <div v-if="toastMsg" class="fixed top-5 right-5 z-50 bg-slate-900 text-white text-xs font-medium px-4 py-2.5 rounded-lg shadow-xl border border-slate-700 transition-all">
-      {{ toastMsg }}
-    </div>
+    <header class="text-center mb-5">
+      <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Gerencia de Configuracao - IC/UFAM</p>
+      <h1 class="text-xl sm:text-2xl font-bold mt-0.5 mb-4">Simulados para a Prova</h1>
 
-    <!-- Topo / Navbar Minimalista -->
-    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded border border-indigo-200">IC / UFAM</span>
-          <span class="text-xs text-slate-500 font-medium">Gerencia de Configuracao</span>
-        </div>
-        <h1 class="text-2xl font-bold text-slate-900 mt-1">Simulado para a Prova</h1>
-      </div>
-
-      <!-- Seletor de Simulados (Pills) -->
-      <div class="flex items-center bg-slate-200/80 p-1 rounded-xl gap-1 text-sm font-semibold">
-        <button 
-          v-for="p in listaProvas" 
+      <nav class="flex justify-center gap-2">
+        <button
+          v-for="(p, i) in provas"
           :key="p.id"
-          @click="selecionarProva(p.id)"
-          class="px-3.5 py-1.5 rounded-lg transition-all text-xs sm:text-sm font-medium"
-          :class="provaAtiva && provaAtiva.id === p.id ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
-        >
-          {{ p.id === 'prova_01' ? 'Simulado 1' : p.id === 'prova_02' ? 'Simulado 2' : 'Simulado 3' }}
-        </button>
-      </div>
+          @click="selecionar(p.id)"
+          class="flex-1 max-w-[160px] px-3 py-2 rounded-lg text-sm font-semibold border transition-colors"
+          :class="ativa && ativa.id === p.id
+            ? 'bg-indigo-600 border-indigo-600 text-white'
+            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'"
+        >Prova {{ i + 1 }}</button>
+      </nav>
     </header>
 
-    <!-- Aviso Discreto de Contexto -->
-    <div class="bg-white border border-slate-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600">
-      <div>
-        <strong>Aviso:</strong> Simulado independente de preparacao elaborado por estudantes. Conteudo base: Git, GitHub e slides azuis de SmartNotes (Prof. David Fernandes de Oliveira).
-      </div>
-      <button @click="copiarLinkAtual()" class="text-indigo-600 hover:text-indigo-800 font-semibold shrink-0 underline decoration-indigo-300">
-        Copiar link deste simulado
-      </button>
-    </div>
+    <p class="text-xs text-center text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+      Simulado independente elaborado por estudantes, baseado nos slides do Prof. David Fernandes de Oliveira.
+      Marque os itens verdadeiros; a resposta de cada questao e a soma deles.
+    </p>
 
-    <!-- Barra de Progresso e Placar Rápido -->
-    <div v-if="provaAtiva" class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div>
-        <div class="text-xs uppercase font-bold tracking-wider text-slate-400">Prova Ativa</div>
-        <h2 class="text-lg font-bold text-slate-900">{{ provaAtiva.titulo }}</h2>
-        <p class="text-xs text-slate-500 mt-0.5">5 questoes somativas no formato binario (01, 02, 04, 08, 16) | 2,0 pts cada</p>
-      </div>
-
-      <div class="flex items-center gap-4 border-t sm:border-t-0 sm:border-l border-slate-100 pt-3 sm:pt-0 sm:pl-5">
-        <div class="text-right">
-          <div class="text-xs font-semibold text-slate-500">Respondidas</div>
-          <div class="text-sm font-bold text-slate-800">{{ questoesRespondidasCount }} / 5</div>
-        </div>
-        <div class="text-right">
-          <div class="text-xs font-semibold text-slate-500">Nota Final</div>
-          <div class="text-xl font-extrabold" :class="conferido ? (pontosObtidos >= 7 ? 'text-emerald-600' : 'text-amber-600') : 'text-slate-300'">
-            {{ conferido ? pontosObtidos.toFixed(1) : '--' }} <span class="text-xs text-slate-400 font-normal">/ 10</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Lista de Questões -->
-    <main v-if="provaAtiva" class="space-y-5">
-      <div 
-        v-for="q in provaAtiva.questoes" 
+    <main v-if="ativa" class="space-y-4">
+      <section
+        v-for="q in ativa.questoes"
         :key="q.numero"
-        class="bg-white border rounded-xl shadow-sm p-5 sm:p-6 transition-all"
-        :class="conferido ? (calcularSomaUsuario(q.numero) === q.soma_correta ? 'border-emerald-300 ring-1 ring-emerald-100' : 'border-rose-300 ring-1 ring-rose-100') : 'border-slate-200'"
+        class="bg-white dark:bg-slate-800 border rounded-xl p-4 sm:p-5"
+        :class="conferido
+          ? (soma(q.numero) === q.soma_correta ? 'border-emerald-300 dark:border-emerald-600' : 'border-rose-300 dark:border-rose-600')
+          : 'border-slate-200 dark:border-slate-700'"
       >
-        <!-- Topo da Questão -->
-        <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded">Questao {{ String(q.numero).padStart(2, '0') }}</span>
-            <span class="text-xs font-semibold text-slate-500">{{ q.tema }}</span>
-          </div>
-          <span class="text-xs font-bold text-slate-400">2,0 pontos</span>
+        <div class="flex flex-wrap justify-between gap-2 text-xs text-slate-500 dark:text-slate-400 pb-2.5 mb-3 border-b border-slate-100 dark:border-slate-700">
+          <span><strong class="text-slate-900 dark:text-slate-100">Questao {{ dois(q.numero) }}</strong> - {{ q.tema }}</span>
+          <span>2,0 pontos</span>
         </div>
 
-        <!-- Enunciado -->
-        <p class="text-sm text-slate-800 leading-relaxed font-medium mb-4">
-          {{ q.enunciado }}
-        </p>
+        <p class="text-sm font-medium mb-3">{{ q.enunciado }}</p>
 
-        <!-- Proposições -->
-        <div class="space-y-2">
-          <label 
-            v-for="p in q.proposicoes" 
-            :key="p.valor"
-            class="flex items-start gap-3 p-3 rounded-lg border transition-all cursor-pointer select-none text-xs sm:text-sm"
-            :class="(respostasUsuario[q.numero] || []).includes(p.valor) ? 'bg-indigo-50/60 border-indigo-200 text-indigo-950' : 'bg-slate-50/70 border-slate-200/80 hover:bg-slate-100/70 text-slate-700'"
+        <label
+          v-for="p in q.proposicoes"
+          :key="p.valor"
+          class="flex items-start gap-2.5 p-3 mb-2 rounded-lg border cursor-pointer text-sm leading-relaxed"
+          :class="respostas[q.numero].includes(p.valor)
+            ? 'bg-indigo-50 dark:bg-indigo-950/50 border-indigo-300 dark:border-indigo-600'
+            : 'bg-slate-50 dark:bg-slate-700/40 border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700/60'"
+        >
+          <input type="checkbox" :value="p.valor" v-model="respostas[q.numero]"
+                 class="mt-0.5 w-4 h-4 accent-indigo-600 shrink-0">
+          <span class="font-mono font-bold shrink-0">({{ dois(p.valor) }})</span>
+          <span>{{ p.texto }}</span>
+        </label>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 mt-3 text-xs text-slate-500 dark:text-slate-400">
+          <span>Sua soma: <b class="font-mono text-base text-slate-900 dark:text-slate-100">{{ dois(soma(q.numero)) }}</b></span>
+          <template v-if="conferido">
+            <span v-if="soma(q.numero) === q.soma_correta"
+                  class="text-xs font-bold px-2.5 py-1 rounded-md border bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-700">
+              Correto (+2,0)
+            </span>
+            <span v-else
+                  class="text-xs font-bold px-2.5 py-1 rounded-md border bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-700">
+              Incorreto - gabarito {{ dois(q.soma_correta) }}
+            </span>
+          </template>
+        </div>
+
+        <div v-if="conferido" class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 space-y-1.5">
+          <div
+            v-for="p in q.proposicoes" :key="p.valor"
+            class="text-xs leading-relaxed p-2.5 rounded-lg border"
+            :class="p.correto
+              ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-700'
+              : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-700'"
           >
-            <input 
-              type="checkbox" 
-              class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 mt-0.5 shrink-0"
-              :value="p.valor"
-              v-model="respostasUsuario[q.numero]"
-            />
-            <span class="font-mono font-bold text-xs px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-600 shrink-0">
-              ({{ String(p.valor).padStart(2, '0') }})
-            </span>
-            <span class="leading-relaxed flex-1">
-              {{ p.texto }}
-            </span>
-          </label>
-        </div>
-
-        <!-- Painel de Soma da Questão -->
-        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2 text-xs">
-            <span class="text-slate-500 font-semibold uppercase tracking-wider">Sua Soma:</span>
-            <span class="font-mono font-extrabold text-base px-2.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
-              {{ String(calcularSomaUsuario(q.numero)).padStart(2, '0') }}
-            </span>
-          </div>
-
-          <div v-if="conferido">
-            <span 
-              v-if="calcularSomaUsuario(q.numero) === q.soma_correta"
-              class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200"
-            >
-              Correto (+2,0 pts)
-            </span>
-            <span 
-              v-else 
-              class="inline-flex items-center text-xs font-bold px-2.5 py-1 rounded bg-rose-50 text-rose-700 border border-rose-200"
-            >
-              Incorreto (Gabarito: {{ String(q.soma_correta).padStart(2, '0') }})
-            </span>
+            <strong :class="p.correto ? 'text-emerald-700 dark:text-emerald-300' : 'text-rose-700 dark:text-rose-300'">
+              ({{ dois(p.valor) }}) {{ p.correto ? 'Verdadeira' : 'Falsa' }}:
+            </strong>
+            {{ p.justificativa }}
           </div>
         </div>
+      </section>
 
-        <!-- Justificativas Detalhadas pós-conferência -->
-        <div v-if="conferido" class="mt-4 pt-3 border-t border-slate-100 space-y-2">
-          <div class="text-xs font-bold text-slate-700 mb-2">
-            Gabarito Oficial: Soma {{ String(q.soma_correta).padStart(2, '0') }} 
-            <span class="text-slate-500 font-normal">
-              (Itens verdadeiros: {{ q.proposicoes_verdadeiras.map(v => '(' + String(v).padStart(2, '0') + ')').join(', ') }})
-            </span>
-          </div>
-
-          <div 
-            v-for="p in q.proposicoes" 
-            :key="p.valor"
-            class="p-2.5 rounded-lg text-xs leading-relaxed border"
-            :class="p.correto ? 'bg-emerald-50/50 border-emerald-200 text-emerald-950' : 'bg-rose-50/50 border-rose-200 text-rose-950'"
-          >
-            <span class="font-mono font-bold">({{ String(p.valor).padStart(2, '0') }})</span>
-            <span class="font-bold ml-1" :class="p.correto ? 'text-emerald-700' : 'text-rose-700'">
-              [{{ p.correto ? 'VERDADEIRA' : 'FALSA' }}]
-            </span>:
-            <span class="text-slate-700">{{ p.justificativa }}</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Barra Inferior Fixa de Ação -->
-      <div class="sticky bottom-4 z-40 bg-white border border-slate-300 rounded-xl shadow-lg p-4 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div>
-            <div class="text-xs text-slate-500 font-medium">Desempenho no Simulado</div>
-            <div class="text-sm font-bold text-slate-900">
-              {{ conferido ? `${totalAcertos} de 5 questoes corretas` : `${questoesRespondidasCount} de 5 respondidas` }}
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button 
-            @click="resetarRespostas()" 
-            class="px-3 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
-          >
+      <div class="sticky bottom-3 flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl shadow-lg px-4 py-3">
+        <span class="text-sm font-bold">
+          {{ conferido ? 'Nota: ' + nota.toFixed(1) + ' / 10' : respondidas + ' de 5 respondidas' }}
+        </span>
+        <div class="flex gap-2">
+          <button @click="limpar()"
+                  class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600">
             Limpar
           </button>
-          <button 
-            @click="conferirGabarito()" 
-            class="px-4 py-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors"
-          >
-            Conferir Gabarito
+          <button @click="conferir()"
+                  class="px-4 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white">
+            Conferir gabarito
           </button>
         </div>
       </div>
     </main>
-
-    <!-- Rodapé -->
-    <footer class="pt-8 pb-4 text-center text-xs text-slate-400 border-t border-slate-200">
-      Simulados de Gerencia de Configuracao | Instituto de Computacao (IC/UFAM) | Vercel Ready
-    </footer>
-
   </div>
 
-  <!-- Lógica Reativa Vue 3 -->
   <script>
     const { createApp, ref, computed, onMounted } = Vue;
 
+    const vazio = () => ({ 1: [], 2: [], 3: [], 4: [], 5: [] });
+
     createApp({
       setup() {
-        const listaProvas = ref([]);
-        const provaAtiva = ref(null);
-        const respostasUsuario = ref({ 1: [], 2: [], 3: [], 4: [], 5: [] });
+        const provas = ref([]);
+        const ativa = ref(null);
+        const respostas = ref(vazio());
         const conferido = ref(false);
-        const toastMsg = ref('');
 
-        const carregarDados = async () => {
-          try {
-            const res = await fetch('/provas.json');
-            const data = await res.json();
-            listaProvas.value = data.provas;
-            sincronizarRota();
-          } catch (err) {
-            console.error('Falha ao carregar dados:', err);
-          }
+        const dois = n => String(n).padStart(2, '0');
+        const soma = n => respostas.value[n].reduce((a, v) => a + Number(v), 0);
+
+        const idDaRota = () => {
+          const m = window.location.pathname.match(/prova([123])/);
+          return 'prova_0' + (m ? m[1] : '1');
         };
 
-        const sincronizarRota = () => {
-          const path = window.location.pathname;
-          if (path.includes('prova2')) {
-            selecionarProva('prova_02', false);
-          } else if (path.includes('prova3')) {
-            selecionarProva('prova_03', false);
-          } else {
-            selecionarProva('prova_01', false);
-          }
-        };
-
-        const selecionarProva = (id, mudarUrl = true) => {
-          const encontrada = listaProvas.value.find(p => p.id === id);
-          if (encontrada) {
-            provaAtiva.value = encontrada;
-            respostasUsuario.value = { 1: [], 2: [], 3: [], 4: [], 5: [] };
-            conferido.value = false;
-            
-            if (mudarUrl) {
-              const rota = '/' + id.replace('_', '');
-              window.history.pushState(null, '', rota === '/prova01' ? '/prova1' : rota);
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        };
-
-        const calcularSomaUsuario = (qNum) => {
-          const vals = respostasUsuario.value[qNum] || [];
-          return vals.reduce((acc, v) => acc + parseInt(v, 10), 0);
-        };
-
-        const totalAcertos = computed(() => {
-          if (!provaAtiva.value || !conferido.value) return 0;
-          let acertos = 0;
-          provaAtiva.value.questoes.forEach(q => {
-            if (calcularSomaUsuario(q.numero) === q.soma_correta) {
-              acertos++;
-            }
-          });
-          return acertos;
-        });
-
-        const pontosObtidos = computed(() => {
-          if (!provaAtiva.value || !conferido.value) return 0.0;
-          let pts = 0.0;
-          provaAtiva.value.questoes.forEach(q => {
-            if (calcularSomaUsuario(q.numero) === q.soma_correta) {
-              pts += q.pontos;
-            }
-          });
-          return pts;
-        });
-
-        const questoesRespondidasCount = computed(() => {
-          let count = 0;
-          for (let i = 1; i <= 5; i++) {
-            if ((respostasUsuario.value[i] || []).length > 0) count++;
-          }
-          return count;
-        });
-
-        const conferirGabarito = () => {
-          conferido.value = true;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          mostrarToast(`Gabarito conferido! Nota: ${pontosObtidos.value.toFixed(1)} / 10.0`);
-        };
-
-        const resetarRespostas = () => {
-          respostasUsuario.value = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+        const selecionar = (id, mudarUrl = true) => {
+          const p = provas.value.find(x => x.id === id);
+          if (!p) return;
+          ativa.value = p;
+          respostas.value = vazio();
           conferido.value = false;
-          mostrarToast('Respostas limpas.');
+          if (mudarUrl) window.history.pushState(null, '', '/prova' + id.slice(-1));
+          window.scrollTo({ top: 0 });
         };
 
-        const copiarLinkAtual = () => {
-          const url = window.location.href;
-          navigator.clipboard.writeText(url).then(() => {
-            mostrarToast('Link copiado para a area de transferencia!');
-          });
-        };
+        const nota = computed(() =>
+          ativa.value.questoes.reduce((t, q) => t + (soma(q.numero) === q.soma_correta ? q.pontos : 0), 0)
+        );
+        const respondidas = computed(() => Object.values(respostas.value).filter(r => r.length).length);
 
-        const mostrarToast = (msg) => {
-          toastMsg.value = msg;
-          setTimeout(() => {
-            toastMsg.value = '';
-          }, 3000);
-        };
+        const conferir = () => { conferido.value = true; };
+        const limpar = () => { respostas.value = vazio(); conferido.value = false; };
 
-        onMounted(() => {
-          carregarDados();
-          window.addEventListener('popstate', sincronizarRota);
+        onMounted(async () => {
+          const res = await fetch('/provas.json');
+          provas.value = (await res.json()).provas;
+          selecionar(idDaRota(), false);
+          window.addEventListener('popstate', () => selecionar(idDaRota(), false));
         });
 
-        return {
-          listaProvas,
-          provaAtiva,
-          respostasUsuario,
-          conferido,
-          toastMsg,
-          selecionarProva,
-          calcularSomaUsuario,
-          totalAcertos,
-          pontosObtidos,
-          questoesRespondidasCount,
-          conferirGabarito,
-          resetarRespostas,
-          copiarLinkAtual
-        };
+        return { provas, ativa, respostas, conferido, dois, soma, selecionar, nota, respondidas, conferir, limpar };
       }
     }).mount('#app');
   </script>

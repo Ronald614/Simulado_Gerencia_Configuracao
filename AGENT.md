@@ -47,9 +47,8 @@ site_estudos/
 │   ├── provas.json                # Banco consolidado de todas as questoes
 │   └── questoes_somativas.md      # Caderno original de estudo
 ├── public/                        # Frontend Web pronto para a Vercel
-│   ├── index.html                 # Single Page Application reativa com Vue 3, Tailwind e DaisyUI
-│   ├── style.css                  # Estilos complementares
-│   ├── app.js                     # Logica do cliente (mantido para compatibilidade estatica)
+│   ├── index.html                 # Pagina unica (Vue 3 local, CSS proprio com tema claro/escuro)
+│   ├── vendor/vue.global.prod.js  # Vue 3 servido localmente (sem CDN externo)
 │   └── provas.json                # Base estatica consumida pelo cliente Vue
 ├── api/                           # Funcoes Serverless da Vercel
 │   └── provas.js                  # Endpoint de API REST JSON (/api/provas)
@@ -100,11 +99,12 @@ Cada questao segue a convencao formal do formato somativo:
 
 ## 6. Arquitetura do Frontend Web (Vercel Ready)
 
-Para proporcionar uma aplicacao leve, sem etapa de compilacao (`zero-build`) e com visual sofisticado, foram combinadas tres tecnologias via CDN:
-- **Vue 3 (Standalone CDN):** Gerencia o estado reativo dos checkboxes, o somatorio instantaneo, a alternancia de rotas e o feedback explicativo.
-- **Tailwind CSS + DaisyUI (via CDN):** Fornece componentes pre-estilizados prontos (Navbar, Tabs, Badges, Cards, Checkboxes, Stats, Alerts) com suporte a modo escuro nativo (`data-theme="dark"`).
+Uma unica pagina (`public/index.html`), sem etapa de compilacao (`zero-build`) e sem CDN externo:
+- **Vue 3 local (`public/vendor/vue.global.prod.js`):** Gerencia o estado dos checkboxes, a soma de cada questao, a troca de prova e o gabarito comentado.
+- **CSS proprio no `index.html`:** Cores definidas em variaveis no `:root`, com tema escuro automatico via `prefers-color-scheme` e contraste legivel nos dois temas.
+- **Navegacao:** Apenas 3 botoes no topo (Prova 1, Prova 2, Prova 3). Nao existe pagina de inicio separada nem paginas `provaN.html` por prova.
 - **Roteamento Vercel (`vercel.json`):**
-  - `/` -> Hub central de navegacao e regras.
+  - `/` -> Abre a Prova 1.
   - `/prova1` -> Simulado Somativo 01 interativo.
   - `/prova2` -> Simulado Somativo 02 interativo.
   - `/prova3` -> Simulado Somativo 03 interativo.
