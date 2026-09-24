@@ -10,3 +10,6 @@ Thumbs.db
 # Logs and scratch
 *.log
 /tmp/
+.vercel
+.env*
+.vercel
