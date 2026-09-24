@@ -5,15 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <title>Simulados Gerencia de Configuracao</title>
+  <script>
+    (function () {
+      try {
+        var salvo = localStorage.getItem('tema');
+        var escuro = salvo ? salvo === 'escuro' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (escuro) document.documentElement.classList.add('dark');
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="/vendor/vue.global.prod.js"></script>
   <script>
-    tailwind.config = { darkMode: 'media' };
+    tailwind.config = { darkMode: 'class' };
   </script>
   <style>[v-cloak] { display: none; }</style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
   <div id="app" v-cloak class="max-w-3xl mx-auto px-4 py-6 pb-24">
+
+    <button
+      @click="alternarTema()"
+      :aria-label="escuro ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
+      class="fixed top-3 right-3 sm:top-4 sm:right-4 z-10 p-2 rounded-full border bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 shadow-sm transition-colors"
+    >
+      <svg v-if="escuro" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+      </svg>
+      <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+      </svg>
+    </button>
 
     <header class="text-center mb-5">
       <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Gerencia de Configuracao - IC/UFAM</p>
@@ -126,6 +149,13 @@
         const ativa = ref(null);
         const respostas = ref(vazio());
         const conferido = ref(false);
+        const escuro = ref(document.documentElement.classList.contains('dark'));
+
+        const alternarTema = () => {
+          escuro.value = !escuro.value;
+          document.documentElement.classList.toggle('dark', escuro.value);
+          try { localStorage.setItem('tema', escuro.value ? 'escuro' : 'claro'); } catch (e) {}
+        };
 
         const dois = n => String(n).padStart(2, '0');
         const soma = n => respostas.value[n].reduce((a, v) => a + Number(v), 0);
@@ -160,7 +190,7 @@
           window.addEventListener('popstate', () => selecionar(idDaRota(), false));
         });
 
-        return { provas, ativa, respostas, conferido, dois, soma, selecionar, nota, respondidas, conferir, limpar };
+        return { provas, ativa, respostas, conferido, escuro, alternarTema, dois, soma, selecionar, nota, respondidas, conferir, limpar };
       }
     }).mount('#app');
   </script>
