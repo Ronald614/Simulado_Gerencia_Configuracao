@@ -12,7 +12,7 @@ O objetivo do sistema e extrair, processar e estruturar o conteudo programatico 
 - **`slides/1_git.pdf` (148 paginas)**: Transcrito integralmente. Abrange fundamentos de controle de versao distribuido, ciclo de vida dos arquivos (Working Directory, Staging Area, Repository), manipulacao de branches, o ponteiro `HEAD`, fast-forward merge versus merge commit, resolucao de conflitos, rebase linear, desfazimento com modos de `git reset` (`--soft`, `--mixed`, `--hard`), rastreamento local via `git reflog` e isolamento temporario com `git stash`.
 - **`slides/smartnotes.pdf` (175 paginas totais)**: Conforme diretriz estrita do projeto, foram isolados e transcritos **exclusivamente os 35 slides de fundo azul** (identificados no espaco de cores RGB por `[218, 227, 243]`). O conteudo filtrado abrange:
   - Slides 22 a 25: Semantic Versioning (SemVer), regras de incremento de MAJOR, MINOR e PATCH, e operadores de controle de dependencia no `package.json` (`^` versus `~`).
-  - Slides 32 a 44: Variaveis de ambiente, principios de Twelve-Factor App, bibliotecas `dotenv` e `envalid`, validacao em tempo de inicializacao (*fail-fast*) via `cleanEnv`, alem de isolamento com `.env.example` e `.gitignore`.
+  - Slides 32 a 44: Variaveis de ambiente, bibliotecas `dotenv` e `envalid`, validacao em tempo de inicializacao (*fail-fast*) via `cleanEnv`, alem de isolamento com `.env.example` e `.gitignore`.
   - Slides 45 a 62: Linters versus Formatadores de codigo, ecossistema comparado entre linguagens, configuracao modular flat (`eslint.config.mjs`) com severidades (`off`, `warn`, `error`), diretivas do `.prettierrc`, extensoes do VS Code e scripts de automacao no `package.json`.
 - **`slides/docker.pdf` (47 paginas)**: Descartado e cancelado por orientacao do usuario (nao faz parte do escopo da prova).
 
@@ -92,9 +92,9 @@ Cada questao segue a convencao formal do formato somativo:
 
 | Prova | Q1 | Q2 | Q3 | Q4 | Q5 | Pontuacao Total |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Simulado 01** | Soma: 11 | Soma: 21 | Soma: 29 | Soma: 23 | Soma: 27 | 10,0 pontos |
-| **Simulado 02** | Soma: 23 | Soma: 23 | Soma: 13 | Soma: 27 | Soma: 23 | 10,0 pontos |
-| **Simulado 03** | Soma: 23 | Soma: 27 | Soma: 19 | Soma: 23 | Soma: 23 | 10,0 pontos |
+| **Simulado 01** | Soma: 22 | Soma: 25 | Soma: 30 | Soma: 15 | Soma: 29 | 10,0 pontos |
+| **Simulado 02** | Soma: 30 | Soma: 27 | Soma: 28 | Soma: 23 | Soma: 29 | 10,0 pontos |
+| **Simulado 03** | Soma: 15 | Soma: 30 | Soma: 11 | Soma: 29 | Soma: 27 | 10,0 pontos |
 
 ---
 

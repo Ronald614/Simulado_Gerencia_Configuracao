@@ -17,39 +17,39 @@
           "valor": 1,
           "texto": "O comando git restore <arquivo> descarta as modificacoes nao indexadas de um arquivo no Working Directory, revertendo-o ao estado atualmente registrado na Staging Area ou no ultimo commit.",
           "correto": true,
-          "justificativa": "O restore restaura o arquivo de trabalho com base no index, descartando edicoes locais nao salvas (Slide 120 e 121 de 1_git.pdf)."
+          "justificativa": "O restore restaura o arquivo de trabalho com base no index, descartando edicoes locais nao salvas (1_git.pdf)."
         },
         {
           "valor": 2,
-          "texto": "O comando git reset HEAD <arquivo> retira o arquivo indicado da Staging Area (desindexacao), preservando integralmente o conteudo modificado no Working Directory.",
+          "texto": "O comando git restore --staged <arquivo> retira o arquivo indicado da Staging Area (desindexacao), preservando integralmente o conteudo modificado no Working Directory.",
           "correto": true,
-          "justificativa": "A operacao retira o arquivo do estado staged para modified sem perder o trabalho editado pelo desenvolvedor (Slide 122 a 124 de 1_git.pdf)."
+          "justificativa": "O --staged desfaz apenas o git add: o arquivo volta de staged para modified sem perder o trabalho editado (1_git.pdf, Desfazendo alteracoes)."
         },
         {
           "valor": 4,
           "texto": "O modo padrao do comando git reset (equivalente a git reset --mixed) move o ponteiro da branch de volta ao commit informado e remove as alteracoes da Staging Area, mantendo as modificacoes no Working Directory.",
           "correto": true,
-          "justificativa": "O comportamento padrao do reset e o --mixed, que desfaz a preparacao no index mantendo os arquivos no disco para revisao (Slide 134 de 1_git.pdf)."
+          "justificativa": "O comportamento padrao do reset e o --mixed, que desfaz a preparacao no index mantendo os arquivos no disco para revisao (1_git.pdf)."
         },
         {
           "valor": 8,
-          "texto": "A execucao de git reset --hard HEAD~1 e uma operacao branda que cria um commit de reversao sem eliminar quaisquer arquivos do disco.",
-          "correto": false,
-          "justificativa": "O reset --hard e uma operacao destrutiva que descarta sumariamente tanto a staging area quanto as edicoes no working directory, sem gerar novo commit (Slide 135 de 1_git.pdf)."
+          "texto": "O comando git commit --amend permite incorporar novos arquivos da Staging Area ao ultimo commit realizado ou alterar a mensagem desse commit, sem gerar um commit adicional no historico.",
+          "correto": true,
+          "justificativa": "O --amend retifica o commit mais recente combinando alteracoes pendentes no index com o snapshot imediatamente anterior (1_git.pdf)."
         },
         {
           "valor": 16,
-          "texto": "O comando git commit --amend permite incorporar novos arquivos da Staging Area ao ultimo commit realizado ou alterar a mensagem desse commit, sem gerar um commit adicional no historico.",
-          "correto": true,
-          "justificativa": "O --amend retifica o commit mais recente combinando alteracoes pendentes no index com o snapshot imediatamente anterior (Slides 143 a 145 de 1_git.pdf)."
+          "texto": "A execucao de git reset --hard HEAD~1 e uma operacao branda que cria um commit de reversao sem eliminar quaisquer arquivos do disco.",
+          "correto": false,
+          "justificativa": "O reset --hard e uma operacao destrutiva que descarta sumariamente tanto a staging area quanto as edicoes no working directory, sem gerar novo commit (1_git.pdf)."
         }
       ],
-      "soma_correta": 23,
+      "soma_correta": 15,
       "proposicoes_verdadeiras": [
         1,
         2,
         4,
-        16
+        8
       ]
     },
     {
@@ -60,39 +60,39 @@
       "proposicoes": [
         {
           "valor": 1,
-          "texto": "No estado de Detached HEAD, qualquer novo commit gerado nao pertence a nenhuma branch formal, ficando vulneravel a ser descartado pelo garbage collector do Git caso o usuario mude de branch sem criar uma referencia nominal.",
-          "correto": true,
-          "justificativa": "Sem uma branch nominal apontando para ele, o commit em detached HEAD torna-se orfao quando o HEAD se desloca (Slide 56 de 1_git.pdf)."
+          "texto": "Quando um conflito de merge acontece, os arquivos conflitantes continuam compativeis para compilacao imediata, pois o compilador ignora nativamente os caracteres <<<<<<< e >>>>>>>.",
+          "correto": false,
+          "justificativa": "Os marcadores geram graves erros sintaticos na linguagem de programacao e impedem a compilacao/execucao do codigo ate serem removidos manualmente (1_git.pdf)."
         },
         {
           "valor": 2,
-          "texto": "Caso ocorram conflitos complexos durante uma operacao de integracao e o desenvolvedor opte por desistir do processo, o comando git merge --abort interrompe a mesclagem e restaura o estado exato anterior ao comando de merge.",
+          "texto": "No estado de Detached HEAD (obtido, por exemplo, com git switch --detach <commit>), o HEAD aponta diretamente para um commit e nao para uma branch, de modo que commits criados nesse estado nao pertencem automaticamente a nenhuma branch.",
           "correto": true,
-          "justificativa": "O comando git merge --abort limpa os marcadores de conflito e restabelece a branch local ao momento anterior a solicitacao de integracao (Slide 83 de 1_git.pdf)."
+          "justificativa": "E o alerta do slide de Detached HEAD: e possivel commitar nesse estado, mas os commits nao ficam associados a uma branch; o uso tipico e inspecionar ou testar versoes antigas (1_git.pdf)."
         },
         {
           "valor": 4,
-          "texto": "Quando um conflito de merge acontece, os arquivos conflitantes continuam compativeis para compilacao imediata, pois o compilador ignora nativamente os caracteres <<<<<<< e >>>>>>>.",
-          "correto": false,
-          "justificativa": "Os marcadores geram graves erros sintaticos na linguagem de programacao e impedem a compilacao/execucao do codigo ate serem removidos manualmente (Slides 76 e 77 de 1_git.pdf)."
+          "texto": "Caso ocorram conflitos complexos durante uma operacao de integracao e o desenvolvedor opte por desistir do processo, o comando git merge --abort interrompe a mesclagem e restaura o estado exato anterior ao comando de merge.",
+          "correto": true,
+          "justificativa": "O comando git merge --abort limpa os marcadores de conflito e restabelece a branch local ao momento anterior a solicitacao de integracao (1_git.pdf)."
         },
         {
           "valor": 8,
           "texto": "A expressao HEAD~2 referencia o commit correspondente ao 'avo' do commit atualmente ativo.",
           "correto": true,
-          "justificativa": "A notacao de til com numero (HEAD~n) navega retroativamente na linhagem de ancestrais primarios (Slide 131 de 1_git.pdf)."
+          "justificativa": "A notacao de til com numero (HEAD~n) navega retroativamente na linhagem de ancestrais primarios (1_git.pdf)."
         },
         {
           "valor": 16,
           "texto": "O utilitario git stash pop restaura as modificacoes mais recentes salvas na pilha de stash e as remove automaticamente dessa pilha de armazenamento temporario.",
           "correto": true,
-          "justificativa": "Diferente de git stash apply (que mantem na pilha), o pop aplica o stash e o desempilha imediatamente (Slide 148 de 1_git.pdf)."
+          "justificativa": "Diferente de git stash apply (que mantem na pilha), o pop aplica o stash e o desempilha imediatamente (1_git.pdf)."
         }
       ],
-      "soma_correta": 27,
+      "soma_correta": 30,
       "proposicoes_verdadeiras": [
-        1,
         2,
+        4,
         8,
         16
       ]
@@ -107,38 +107,38 @@
           "valor": 1,
           "texto": "O git merge e a abordagem preferencial quando se deseja preservar a fidelidade historica e cronologica das bifurcacoes ou quando se esta integrando branches colaborativas de longa duracao.",
           "correto": true,
-          "justificativa": "O merge preserva o contexto de ramificacao e nao distorce a linha do tempo colaborativa (Slide 116 de 1_git.pdf)."
+          "justificativa": "O merge preserva o contexto de ramificacao e nao distorce a linha do tempo colaborativa (1_git.pdf)."
         },
         {
           "valor": 2,
           "texto": "O git rebase e frequentemente utilizado em branches locais de feature antes do merge na main para incorporar atualizacoes recentes da branch base e evitar commits de merge desnecessarios.",
           "correto": true,
-          "justificativa": "O rebase local lineariza a branch do desenvolvedor, tornando a posterior integracao na base limpa e direta (Slides 112 a 115 de 1_git.pdf)."
+          "justificativa": "O rebase local lineariza a branch do desenvolvedor, tornando a posterior integracao na base limpa e direta (1_git.pdf)."
         },
         {
           "valor": 4,
           "texto": "Ao sofrer rebase, os commits originais mantem seus mesmos identificadores de hash SHA-1 inalterados, viabilizando o pareamento perfeito com branches remotas clonadas por terceiros.",
           "correto": false,
-          "justificativa": "O rebase calcula novos hashes SHA-1 para cada commit reaplicado, destruindo a compatibilidade com colaboradores que tenham os hashes anteriores (Slides 117 e 118 de 1_git.pdf)."
+          "justificativa": "O rebase calcula novos hashes SHA-1 para cada commit reaplicado, destruindo a compatibilidade com colaboradores que tenham os hashes anteriores (1_git.pdf)."
         },
         {
           "valor": 8,
-          "texto": "Se um commit for descartado indevidamente por um git reset --hard, o comando git log sem argumentos especiais sera a ferramenta indicada para localiza-lo e resgata-lo.",
-          "correto": false,
-          "justificativa": "O git log apenas percorre commits alcancaveis na arvore atual. Commits orfaos so podem ser localizados via git reflog (Slides 136 a 139 de 1_git.pdf)."
+          "texto": "Um merge commit e necessario quando as duas branches avancaram separadamente, ou seja, quando nao e possivel realizar um fast-forward; esse novo commit integra o historico das duas branches.",
+          "correto": true,
+          "justificativa": "Se as branches divergiram, o Git cria um novo commit de merge unindo as duas linhas; sem divergencia, basta o fast-forward (1_git.pdf, Mesclando Branches)."
         },
         {
           "valor": 16,
-          "texto": "Em uma operacao de merge de tres vias (three-way merge), o Git utiliza tres pontos estruturais: os dois commits de topo das branches que estao sendo mescladas e o commit ancestral comum mais recente entre elas.",
-          "correto": true,
-          "justificativa": "O algoritmo de 3 vias baseia sua reconciliacao na analise diferencial entre o ancestral comum e as duas pontas divergentes (Slides 61 e 62 de 1_git.pdf)."
+          "texto": "Se um commit for descartado indevidamente por um git reset --hard, o comando git log sem argumentos especiais sera a ferramenta indicada para localiza-lo e resgata-lo.",
+          "correto": false,
+          "justificativa": "O git log apenas percorre commits alcancaveis na arvore atual. Commits orfaos so podem ser localizados via git reflog (1_git.pdf)."
         }
       ],
-      "soma_correta": 19,
+      "soma_correta": 11,
       "proposicoes_verdadeiras": [
         1,
         2,
-        16
+        8
       ]
     },
     {
@@ -151,38 +151,38 @@
           "valor": 1,
           "texto": "Uma versao SemVer obedece rigidamente ao formato MAJOR.MINOR.PATCH, no qual cada segmento possui significado semantico formal definido pelo impacto da mudanca no sistema.",
           "correto": true,
-          "justificativa": "A semantica do versionamento divide as modificacoes entre quebras de contrato, adicoes funcionais e correcoes de bugs (Slide 22 de smartnotes.pdf)."
+          "justificativa": "A semantica do versionamento divide as modificacoes entre quebras de contrato, adicoes funcionais e correcoes de bugs (smartnotes.pdf)."
         },
         {
           "valor": 2,
-          "texto": "A evolucao de 5.1.0 para 5.1.1 representa uma correcao de falha (patch) que nao introduz novas funcionalidades e preserva completa compatibilidade retroativa com versoes anteriores.",
-          "correto": true,
-          "justificativa": "PATCH destina-se exclusivamente a correcoes de bugs estaveis e retrocompativeis (Slides 22 e 23 de smartnotes.pdf)."
+          "texto": "O operador de dependencia ^ (circunflexo) instalado na versao ^5.2.1 autoriza o npm update a instalar uma versao 6.0.0 lancada posteriormente pelos mantenedores da biblioteca.",
+          "correto": false,
+          "justificativa": "O circunflexo bloqueia categoricamente versoes com MAJOR diferente, impedindo que breaking changes sejam instaladas involuntariamente (smartnotes.pdf)."
         },
         {
           "valor": 4,
-          "texto": "A declaracao de versao 'express': '5.2.1' (sem prefixos como ^ ou ~) impoe a instalacao estrita e exata da versao 5.2.1, nao sofrendo atualizacoes automaticas via npm update.",
+          "texto": "A evolucao de 5.1.0 para 5.1.1 representa uma correcao de falha (patch) que nao introduz novas funcionalidades e preserva completa compatibilidade retroativa com versoes anteriores.",
           "correto": true,
-          "justificativa": "Sem prefixos de intervalo de versao, a dependencia fica fixada (pinned) de maneira deterministica no numero informado (Slides 24 e 25 de smartnotes.pdf)."
+          "justificativa": "PATCH destina-se exclusivamente a correcoes de bugs estaveis e retrocompativeis (smartnotes.pdf)."
         },
         {
           "valor": 8,
-          "texto": "O operador de dependencia ^ (circunflexo) instalado na versao ^5.2.1 autoriza o npm update a instalar uma versao 6.0.0 lancada posteriormente pelos mantenedores da biblioteca.",
-          "correto": false,
-          "justificativa": "O circunflexo bloqueia categoricamente versoes com MAJOR diferente, impedindo que breaking changes sejam instaladas involuntariamente (Slide 24 de smartnotes.pdf)."
+          "texto": "A declaracao de versao 'express': '5.2.1' (sem prefixos como ^ ou ~) impoe a instalacao estrita e exata da versao 5.2.1, nao sofrendo atualizacoes automaticas via npm update.",
+          "correto": true,
+          "justificativa": "Sem prefixos de intervalo de versao, a dependencia fica fixada (pinned) de maneira deterministica no numero informado (smartnotes.pdf)."
         },
         {
           "valor": 16,
           "texto": "O operador ~ (til) e mais conservador do que o circunflexo (^), permitindo ao npm instalar apenas novas versoes de correcao de bug (PATCHs), protegendo a aplicacao contra alteracoes de comportamento em funcionalidades novas.",
           "correto": true,
-          "justificativa": "O til confina o npm update estritamente a correcoes de falhas na mesma versao minor (Slide 25 de smartnotes.pdf)."
+          "justificativa": "O til confina o npm update estritamente a correcoes de falhas na mesma versao minor (smartnotes.pdf)."
         }
       ],
-      "soma_correta": 23,
+      "soma_correta": 29,
       "proposicoes_verdadeiras": [
         1,
-        2,
         4,
+        8,
         16
       ]
     },
@@ -196,38 +196,38 @@
           "valor": 1,
           "texto": "A biblioteca envalid impede falhas silenciosas na aplicacao por meio da abordagem fail-fast, garantindo que o servidor nao inicie se configuracoes vitais de conexao ou seguranca estiverem ausentes.",
           "correto": true,
-          "justificativa": "O envalid aborta a execucao imediatamente no bootstrap caso os requisitos do esquema de variaveis nao sejam cumpridos (Slides 38 a 44 de smartnotes.pdf)."
+          "justificativa": "O envalid aborta a execucao imediatamente no bootstrap caso os requisitos do esquema de variaveis nao sejam cumpridos (smartnotes.pdf)."
         },
         {
           "valor": 2,
           "texto": "A funcao cleanEnv do envalid aceita validadores de tipo como str() para cadeias de caracteres e port() para portas de rede com limites numericos validos e valores default opcionais.",
           "correto": true,
-          "justificativa": "Os validadores embutidos asseguram tipos corretos como portas validas e strings obrigatorias ou com valores padrao (Slide 40 e 41 de smartnotes.pdf)."
+          "justificativa": "Os validadores embutidos asseguram tipos corretos como portas validas e strings obrigatorias ou com valores padrao (smartnotes.pdf)."
         },
         {
           "valor": 4,
-          "texto": "No novo sistema de configuracao flat do ESLint (arquivo eslint.config.mjs), e possivel definir regras especificas para o compilador TypeScript atraves do pacote typescript-eslint.",
-          "correto": true,
-          "justificativa": "O arquivo modular eslint.config.mjs carrega as recomendacoes de typescript-eslint para aplicar analise estatica ao TypeScript (Slides 52 a 58 de smartnotes.pdf)."
+          "texto": "Configurar uma regra no ESLint com o valor 'off' faz com que o linter interrompa a compilacao do projeto emitindo um codigo de erro fatal para o sistema operacional.",
+          "correto": false,
+          "justificativa": "O modificador 'off' desativa inteiramente a regra, fazendo com que o ESLint a ignore sem disparar avisos ou erros (smartnotes.pdf)."
         },
         {
           "valor": 8,
-          "texto": "Configurar uma regra no ESLint com o valor 'off' faz com que o linter interrompa a compilacao do projeto emitindo um codigo de erro fatal para o sistema operacional.",
-          "correto": false,
-          "justificativa": "O modificador 'off' desativa inteiramente a regra, fazendo com que o ESLint a ignore sem disparar avisos ou erros (Slides 55 e 56 de smartnotes.pdf)."
+          "texto": "No novo sistema de configuracao flat do ESLint (arquivo eslint.config.mjs), e possivel definir regras especificas para o compilador TypeScript atraves do pacote typescript-eslint.",
+          "correto": true,
+          "justificativa": "O arquivo modular eslint.config.mjs carrega as recomendacoes de typescript-eslint para aplicar analise estatica ao TypeScript (smartnotes.pdf)."
         },
         {
           "valor": 16,
           "texto": "A utilizacao da extensao oficial do ESLint ou Prettier no VS Code permite identificar violacoes de regras em tempo real no editor e reformatar o arquivo automaticamente ao pressionar Ctrl+S.",
           "correto": true,
-          "justificativa": "A integracao no editor proporciona feedback imediato ao desenvolvedor e formatacao automatica ao salvar arquivos (Slides 51 e 61 de smartnotes.pdf)."
+          "justificativa": "A integracao no editor proporciona feedback imediato ao desenvolvedor e formatacao automatica ao salvar arquivos (smartnotes.pdf)."
         }
       ],
-      "soma_correta": 23,
+      "soma_correta": 27,
       "proposicoes_verdadeiras": [
         1,
         2,
-        4,
+        8,
         16
       ]
     }
